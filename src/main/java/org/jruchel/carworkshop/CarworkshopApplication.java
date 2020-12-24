@@ -11,3 +11,7 @@ public class CarworkshopApplication {
     }
 
 }
+
+//TODO it is now possible to override clients data if you input their phone number or email and override the remaining with yours
+// since sending another order these values are updated
+//TODO a solution to this would be to require a clients email address and require the client to confirm their order through the email

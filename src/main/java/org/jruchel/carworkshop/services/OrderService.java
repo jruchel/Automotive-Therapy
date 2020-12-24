@@ -5,6 +5,7 @@ import org.jruchel.carworkshop.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +17,10 @@ public class OrderService {
     public Order findById(Integer id) {
         Optional<Order> optional = orderRepository.findById(id);
         return optional.orElse(null);
+    }
+
+    public List<Order> getUnrespondedOrders() {
+        return orderRepository.getUnresponedOrders();
     }
 
     public void save(Order order) {

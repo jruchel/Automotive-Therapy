@@ -1,16 +1,16 @@
-package org.jruchel.carworkshop.validation;
+package org.jruchel.carworkshop.validation.order;
 
-import org.jruchel.carworkshop.validation.EmailValidator;
+import org.jruchel.carworkshop.validation.client.PhoneNumberValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = EmailValidator.class)
+@Constraint(validatedBy = DateValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PhoneNumberConstraint {
+public @interface DateConstraint {
     String message() default "Name is not valid";
 
     Class<?>[] groups() default {};

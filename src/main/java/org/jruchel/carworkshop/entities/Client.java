@@ -1,9 +1,14 @@
 package org.jruchel.carworkshop.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.aspectj.weaver.ast.Or;
+import org.jruchel.carworkshop.validation.client.EmailConstraint;
+import org.jruchel.carworkshop.validation.client.PhoneNumberConstraint;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,9 +21,20 @@ public class Client {
     @Column(name = "id")
     private int id;
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Order> orders;
-    @Column(name = "phoneNuber")
+    @Column(name = "phoneNumber")
+    @PhoneNumberConstraint
     private String phoneNumber;
     @Column(name = "email")
+    @EmailConstraint
     private String email;
+
+    public Client() {
+        this.orders = new ArrayList<>();
+    }
+
+    public void addOrder(Order order) {
+        orders.add(order);
+    }
 }

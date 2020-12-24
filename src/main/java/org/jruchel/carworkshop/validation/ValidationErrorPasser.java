@@ -1,4 +1,4 @@
-package org.whatever.library.validation;
+package org.jruchel.carworkshop.validation;
 
 
 import org.springframework.stereotype.Component;
@@ -8,10 +8,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
 public class ValidationErrorPasser {
 
     private Map<String, String> messages = new HashMap<>();
+    private static ValidationErrorPasser instance;
+
+    public static ValidationErrorPasser getInstance() {
+        if (instance == null) instance = new ValidationErrorPasser();
+        return instance;
+    }
 
     public void addMessage(String parameter, String message) {
         messages.put(parameter, message);

@@ -1,6 +1,4 @@
-package org.jruchel.carworkshop.validation;
-
-import org.jruchel.carworkshop.validation.EmailValidator;
+package org.jruchel.carworkshop.validation.client;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
