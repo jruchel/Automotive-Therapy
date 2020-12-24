@@ -2,8 +2,10 @@ package org.jruchel.carworkshop.controllers;
 
 import org.jruchel.carworkshop.entities.Client;
 import org.jruchel.carworkshop.entities.Email;
+import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.MailingService;
+import org.jruchel.carworkshop.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,9 @@ public class ModeratorController {
 
     @Autowired
     private ClientService clientService;
+
+    @Autowired
+    private OrderService orderService;
 
     @Autowired
     private MailingService mailingService;
@@ -46,6 +51,14 @@ public class ModeratorController {
         if (id != null) client = clientService.findById(id);
         if (client == null) client = clientService.findByEmail(email);
         return new ResponseEntity<>(client, HttpStatus.OK);
+    }
+
+    @PostMapping("/orders/respond")
+    public ResponseEntity<Order> respondeToOrder(@RequestBody int orderID) {
+        Order order = orderService.findById(orderID);
+        order.setResponed(true);
+        orderService.save(order);
+        return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
 }
