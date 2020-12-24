@@ -24,18 +24,7 @@ public class ClientController {
         this.errorPasser = ValidationErrorPasser.getInstance();
     }
 
-    @GetMapping("/unresponded")
-    public ResponseEntity<Set<Client>> getUnrespondedOrders() {
-        return new ResponseEntity<>(clientService.getUnrespondedClients(), HttpStatus.OK);
-    }
 
-    @GetMapping()
-    public ResponseEntity<Client> getUnrespondedOrders(@PathParam(value = "id") Integer id, @PathParam(value = "email") String email) {
-        Client client = null;
-        if(id != null) client = clientService.findById(id);
-        if(client == null) client = clientService.findByEmail(email);
-        return new ResponseEntity<>(client, HttpStatus.OK);
-    }
 
     @PostMapping("/add")
     public ResponseEntity<String> addClient(@RequestBody Client client) {
