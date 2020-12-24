@@ -29,9 +29,11 @@ public class Client {
     @Column(name = "email")
     @EmailConstraint
     private String email;
+    private boolean newsLetter;
 
     public Client() {
         this.orders = new ArrayList<>();
+        this.newsLetter = false;
     }
 
     public void addOrder(Order order) {
