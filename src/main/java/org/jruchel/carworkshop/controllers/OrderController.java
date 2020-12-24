@@ -34,10 +34,6 @@ public class OrderController {
         this.mailingService = mailingService;
     }
 
-    @GetMapping("/unresponded")
-    public ResponseEntity<List<Order>> getUnrespondedOrders() {
-        return new ResponseEntity<>(orderService.getUnrespondedOrders(), HttpStatus.OK);
-    }
 
     @PostMapping("/add")
     public ResponseEntity<String> addOrder(@RequestBody Order order) {

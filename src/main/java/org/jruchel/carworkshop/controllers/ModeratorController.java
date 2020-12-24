@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -29,9 +30,15 @@ public class ModeratorController {
     @Autowired
     private MailingService mailingService;
 
-    @GetMapping("/unresponded")
-    public ResponseEntity<Set<Client>> getUnrespondedOrders() {
+    @GetMapping("/unresponded/clients")
+    public ResponseEntity<Set<Client>> getUnrespondedClients() {
         return new ResponseEntity<>(clientService.getUnrespondedClients(), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/unresponded/orders")
+    public ResponseEntity<List<Order>> getUnrespondedOrders() {
+        return new ResponseEntity<>(orderService.getUnrespondedOrders(), HttpStatus.OK);
     }
 
     @PostMapping("/mail")
@@ -45,7 +52,7 @@ public class ModeratorController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/client")
     public ResponseEntity<Client> getUnrespondedOrders(@PathParam(value = "id") Integer id, @PathParam(value = "email") String email) {
         Client client = null;
         if (id != null) client = clientService.findById(id);
@@ -53,7 +60,7 @@ public class ModeratorController {
         return new ResponseEntity<>(client, HttpStatus.OK);
     }
 
-    @PostMapping("/orders/respond")
+    @PostMapping("/order/respond")
     public ResponseEntity<Order> respondeToOrder(@RequestBody int orderID) {
         Order order = orderService.findById(orderID);
         order.setResponed(true);
