@@ -10,12 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.mail.MessagingException;
 import javax.websocket.server.PathParam;
-import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -32,14 +28,18 @@ public class ModeratorController {
     private MailingService mailingService;
 
     @GetMapping("/unresponded/clients")
-    public ResponseEntity<Set<Client>> getUnrespondedClients() {
-        return new ResponseEntity<>(clientService.getUnrespondedClients(), HttpStatus.OK);
+    public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "1", value = "page") int page,@RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
+        if (page < 1) page = 1;
+        if (elements < 1) elements = 1;
+        return new ResponseEntity<>(clientService.getUnrespondedClients(page, elements), HttpStatus.OK);
     }
 
 
     @GetMapping("/unresponded/orders")
-    public ResponseEntity<List<Order>> getUnrespondedOrders() {
-        return new ResponseEntity<>(orderService.getUnrespondedOrders(), HttpStatus.OK);
+    public ResponseEntity<List<Order>> getUnrespondedOrders(@RequestParam(required = false, defaultValue = "1", value = "page") int page,@RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
+        if (page < 1) page = 1;
+        if (elements < 1) elements = 1;
+        return new ResponseEntity<>(orderService.getUnrespondedOrders(page, elements), HttpStatus.OK);
     }
 
     @PostMapping("/mail")
@@ -54,7 +54,7 @@ public class ModeratorController {
     }
 
     @GetMapping("/client")
-    public ResponseEntity<Client> getUnrespondedOrders(@PathParam(value = "id") Integer id, @PathParam(value = "email") String email) {
+    public ResponseEntity<Client> getUnrespondedOrders(@RequestParam(value = "id") Integer id, @PathParam(value = "email") String email) {
         Client client = null;
         if (id != null) client = clientService.findById(id);
         if (client == null) client = clientService.findByEmail(email);

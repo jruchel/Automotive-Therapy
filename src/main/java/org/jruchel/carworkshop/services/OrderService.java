@@ -3,6 +3,7 @@ package org.jruchel.carworkshop.services;
 import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +20,8 @@ public class OrderService {
         return optional.orElse(null);
     }
 
-    public List<Order> getUnrespondedOrders() {
-        return orderRepository.getUnresponedOrders();
+    public List<Order> getUnrespondedOrders(int page, int elements) {
+        return orderRepository.getUnresponedOrders(PageRequest.of(page - 1, elements));
     }
 
     public void save(Order order) {

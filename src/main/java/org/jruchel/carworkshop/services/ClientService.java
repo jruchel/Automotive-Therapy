@@ -5,6 +5,8 @@ import org.jruchel.carworkshop.entities.Client;
 import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -31,13 +33,8 @@ public class ClientService {
         return clientRepository.findByEmail(email);
     }
 
-    public Set<Client> getUnrespondedClients() {
-        List<Order> unrespondedOrders = orderService.getUnrespondedOrders();
-        Set<Client> unrespondedClients = new HashSet<>();
-        for (Order o : unrespondedOrders) {
-            unrespondedClients.add(o.getClient());
-        }
-        return unrespondedClients;
+    public List<Client> getUnrespondedClients(int page, int elements) {
+        return clientRepository.getUnrespondedClients(PageRequest.of(page - 1, elements));
     }
 
     public void save(Client client) {
