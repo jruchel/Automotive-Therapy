@@ -16,7 +16,7 @@ import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-
+@CrossOrigin
 @RestController
 @RequestMapping("/moderator")
 public class ModeratorController {
@@ -45,9 +45,9 @@ public class ModeratorController {
     public ResponseEntity<String> sendEmail(@RequestBody Email email) {
         try {
             email.setFrom(org.jruchel.carworkshop.utils.Properties.getInstance().readProperty("mail.sender"));
-            mailingService.sendEmail(email);
+            mailingService.sendEmail(email, false);
             return new ResponseEntity<>("Message sent.", HttpStatus.OK);
-        } catch (IOException | MessagingException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }

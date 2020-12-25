@@ -30,7 +30,7 @@ public class MailingService {
         }
     }
 
-    private void sendEmail(String from, String to, String subject, String message, List<Byte[]> attachments) throws MessagingException {
+    private void sendEmail(String from, String to, String subject, String message, List<Byte[]> attachments) {
         if (attachments == null || attachments.size() == 0) {
             sendEmail(from, to, subject, message);
         } else {
@@ -38,12 +38,22 @@ public class MailingService {
         }
     }
 
-    public void sendEmail(String to, String subject, String content) {
-        sendEmail(sender, to, subject, content);
+    public void sendEmail(String to, String subject, String content, boolean async) {
+        if (async) {
+            new Thread(() -> sendEmail(sender, to, subject, content)).start();
+        } else {
+            sendEmail(sender, to, subject, content);
+        }
     }
 
-    public void sendEmail(Email email) throws MessagingException {
-        sendEmail(sender, email.getTo(), email.getSubject(), email.getMessage(), email.getAttachments());
+    public void sendEmail(Email email, boolean async) {
+        if (async) {
+            new Thread(() -> {
+                sendEmail(sender, email.getTo(), email.getSubject(), email.getMessage(), email.getAttachments());
+            }).start();
+        } else {
+            sendEmail(sender, email.getTo(), email.getSubject(), email.getMessage(), email.getAttachments());
+        }
     }
 
     private void sendEmail(String from, String to, String subject, String content) {

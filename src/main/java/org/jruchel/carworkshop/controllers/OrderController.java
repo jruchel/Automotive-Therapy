@@ -12,10 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -57,8 +58,7 @@ public class OrderController {
             }
             order.setDate(new Date());
             orderService.save(order);
-            mailingService.sendEmail(order.getClient().getEmail(), properties.readProperty("mailing.generic.subject"), properties.readProperty("mailing.generic.content"));
-
+            mailingService.sendEmail(order.getClient().getEmail(), properties.readProperty("mailing.generic.subject"), properties.readProperty("mailing.generic.content"), true);
         } catch (Exception ex) {
             String message = errorPasser.getMessagesAsString();
             if (message.isEmpty()) message = ex.getMessage();
