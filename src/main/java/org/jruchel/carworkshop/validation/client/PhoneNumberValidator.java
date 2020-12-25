@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class PhoneNumberValidator extends Validator<PhoneNumberConstraint, String> {
 
-    private Properties properties = Properties.getInstance();
+    private final Properties properties = Properties.getInstance();
 
     protected boolean Constraint_matchesPhonePattern(String value) {
         try {

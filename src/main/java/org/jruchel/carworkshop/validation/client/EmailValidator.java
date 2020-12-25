@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class EmailValidator extends Validator<EmailConstraint, String> {
 
-    private Properties properties = Properties.getInstance();
+    private final Properties properties = Properties.getInstance();
 
     protected boolean Constraint_matchesEmailPattern(String value) {
         try {

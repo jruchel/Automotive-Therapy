@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.websocket.server.PathParam;
 import java.util.List;
 
@@ -18,17 +19,28 @@ import java.util.List;
 @RequestMapping("/moderator")
 public class ModeratorController {
 
-    @Autowired
     private ClientService clientService;
 
-    @Autowired
     private OrderService orderService;
 
+    private final MailingService mailingService;
+
+    public ModeratorController(MailingService mailingService) {
+        this.mailingService = mailingService;
+    }
+
     @Autowired
-    private MailingService mailingService;
+    public ModeratorController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    @Autowired
+    public ModeratorController(ClientService clientService) {
+        this.clientService = clientService;
+    }
 
     @GetMapping("/unresponded/clients")
-    public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "1", value = "page") int page,@RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
+    public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
         if (page < 1) page = 1;
         if (elements < 1) elements = 1;
         return new ResponseEntity<>(clientService.getUnrespondedClients(page, elements), HttpStatus.OK);
@@ -36,7 +48,7 @@ public class ModeratorController {
 
 
     @GetMapping("/unresponded/orders")
-    public ResponseEntity<List<Order>> getUnrespondedOrders(@RequestParam(required = false, defaultValue = "1", value = "page") int page,@RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
+    public ResponseEntity<List<Order>> getUnrespondedOrders(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
         if (page < 1) page = 1;
         if (elements < 1) elements = 1;
         return new ResponseEntity<>(orderService.getUnrespondedOrders(page, elements), HttpStatus.OK);
@@ -68,5 +80,4 @@ public class ModeratorController {
         orderService.save(order);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
-
 }

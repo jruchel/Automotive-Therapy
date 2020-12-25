@@ -12,8 +12,11 @@ import java.util.Optional;
 @Service
 public class OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+
+    public OrderService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
     public Order findById(Integer id) {
         Optional<Order> optional = orderRepository.findById(id);
@@ -21,7 +24,7 @@ public class OrderService {
     }
 
     public List<Order> getUnrespondedOrders(int page, int elements) {
-        return orderRepository.getUnresponedOrders(PageRequest.of(page - 1, elements));
+        return orderRepository.getUnrespondedOrders(PageRequest.of(page - 1, elements));
     }
 
     public void save(Order order) {

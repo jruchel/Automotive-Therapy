@@ -1,12 +1,9 @@
 package org.jruchel.carworkshop.services;
 
-import org.aspectj.weaver.ast.Or;
 import org.jruchel.carworkshop.entities.Client;
-import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,10 +11,17 @@ import java.util.*;
 @Service
 public class ClientService {
 
-    @Autowired
     private ClientRepository clientRepository;
+    private final OrderService orderService;
+
+    public ClientService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Autowired
-    private OrderService orderService;
+    public ClientService(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
 
 
     public Client findById(Integer id) {

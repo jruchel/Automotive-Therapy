@@ -3,7 +3,6 @@ package org.jruchel.carworkshop.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.aspectj.weaver.ast.Or;
 import org.jruchel.carworkshop.validation.client.EmailConstraint;
 import org.jruchel.carworkshop.validation.client.PhoneNumberConstraint;
 

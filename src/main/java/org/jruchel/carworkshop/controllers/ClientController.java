@@ -3,7 +3,6 @@ package org.jruchel.carworkshop.controllers;
 import org.jruchel.carworkshop.entities.Client;
 import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.services.ClientService;
-import org.jruchel.carworkshop.services.MailingService;
 import org.jruchel.carworkshop.validation.ValidationErrorPasser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +14,10 @@ public class ClientController {
 
     private final ClientService clientService;
     private final ValidationErrorPasser errorPasser;
-    private final MailingService mailingService;
 
-    public ClientController(ClientService clientService, MailingService mailingService) {
+    public ClientController(ClientService clientService) {
         this.clientService = clientService;
         this.errorPasser = ValidationErrorPasser.getInstance();
-        this.mailingService = mailingService;
     }
 
 

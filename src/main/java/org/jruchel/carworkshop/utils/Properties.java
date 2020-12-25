@@ -24,7 +24,7 @@ public class Properties {
     public String readProperty(String key) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(getAbsolutePath("/src/main/resources/application.properties")));
         String regex = String.format("%s\\=(.+)", key);
-        String str = "";
+        String str;
         Pattern propertyPattern = Pattern.compile(regex);
         Matcher matcher;
         while ((str = reader.readLine()) != null) {

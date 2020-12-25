@@ -11,6 +11,6 @@ import java.util.List;
 public interface OrderRepository extends PagingAndSortingRepository<Order, Integer> {
 
     @Query(nativeQuery = true, value = "select * from orders where responded = 0")
-    List<Order> getUnresponedOrders(Pageable pageable);
+    List<Order> getUnrespondedOrders(Pageable pageable);
 
 }

@@ -7,14 +7,11 @@ import org.jruchel.carworkshop.services.MailingService;
 import org.jruchel.carworkshop.services.OrderService;
 import org.jruchel.carworkshop.utils.Properties;
 import org.jruchel.carworkshop.validation.ValidationErrorPasser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -23,9 +20,9 @@ public class OrderController {
 
     private final OrderService orderService;
     private final ClientService clientService;
-    private ValidationErrorPasser errorPasser;
+    private final ValidationErrorPasser errorPasser;
     private final MailingService mailingService;
-    private Properties properties;
+    private final Properties properties;
 
     public OrderController(OrderService orderService, ClientService clientService, MailingService mailingService) {
         this.properties = Properties.getInstance();

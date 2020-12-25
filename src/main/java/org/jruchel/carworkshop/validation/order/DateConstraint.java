@@ -1,7 +1,5 @@
 package org.jruchel.carworkshop.validation.order;
 
-import org.jruchel.carworkshop.validation.client.PhoneNumberValidator;
-
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;

@@ -23,7 +23,7 @@ public class Validator<A extends Annotation, E> implements ConstraintValidator<A
     @Override
     public boolean isValid(E value, ConstraintValidatorContext context) {
         boolean result = true;
-        Method[] methods = Arrays.stream(getClass().getDeclaredMethods()).filter(m -> m.getName().contains("Constraint_")).collect(Collectors.toList()).toArray(new Method[0]);
+        Method[] methods = Arrays.stream(getClass().getDeclaredMethods()).filter(m -> m.getName().contains("Constraint_")).toArray(Method[]::new);
         for (Method m : methods) {
             try {
                 m.setAccessible(true);

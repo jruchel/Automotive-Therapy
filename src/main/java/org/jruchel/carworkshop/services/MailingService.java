@@ -4,7 +4,6 @@ import org.jruchel.carworkshop.entities.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,15 +13,15 @@ import java.util.List;
 public class MailingService {
 
     private String sender;
-    @Autowired
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
-    public MailingService() {
+    public MailingService(JavaMailSender javaMailSender) {
         try {
             this.sender = org.jruchel.carworkshop.utils.Properties.getInstance().readProperty("spring.mail.username");
         } catch (IOException e) {
             this.sender = "jruchel254@gmail.com";
         }
+        this.javaMailSender = javaMailSender;
     }
 
     private void sendEmail(String from, String to, String subject, String message, List<Byte[]> attachments) {
@@ -43,9 +42,7 @@ public class MailingService {
 
     public void sendEmail(Email email, boolean async) {
         if (async) {
-            new Thread(() -> {
-                sendEmail(sender, email.getTo(), email.getSubject(), email.getMessage(), email.getAttachments());
-            }).start();
+            new Thread(() -> sendEmail(sender, email.getTo(), email.getSubject(), email.getMessage(), email.getAttachments())).start();
         } else {
             sendEmail(sender, email.getTo(), email.getSubject(), email.getMessage(), email.getAttachments());
         }
