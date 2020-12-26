@@ -11,16 +11,14 @@ import java.util.*;
 @Service
 public class ClientService {
 
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
     private final OrderService orderService;
 
-    public ClientService(OrderService orderService) {
-        this.orderService = orderService;
-    }
 
     @Autowired
-    public ClientService(ClientRepository clientRepository) {
+    public ClientService(ClientRepository clientRepository, OrderService orderService) {
         this.clientRepository = clientRepository;
+        this.orderService = orderService;
     }
 
 

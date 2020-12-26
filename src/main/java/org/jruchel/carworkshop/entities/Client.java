@@ -20,7 +20,6 @@ public class Client {
     @Column(name = "id")
     private int id;
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Order> orders;
     @Column(name = "phoneNumber")
     @PhoneNumberConstraint

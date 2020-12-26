@@ -7,6 +7,9 @@ import org.jruchel.carworkshop.validation.ValidationErrorPasser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/clients")
@@ -36,6 +39,12 @@ public class ClientController {
         if (clientService.findByPhone(client.getPhoneNumber()) != null || clientService.findByEmail(client.getEmail()) != null)
             return new ResponseEntity<>("Client added successfully to the database", HttpStatus.OK);
         return new ResponseEntity<>("Failed to add client to the database", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/get/{email}")
+    public ResponseEntity<List<Order>> getClientsOrders(@PathVariable String email) {
+        Client client = clientService.findByEmail(email);
+        return new ResponseEntity<>(client.getOrders(), HttpStatus.OK);
     }
 
 }

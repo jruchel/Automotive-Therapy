@@ -1,6 +1,7 @@
 package org.jruchel.carworkshop.controllers;
 
 import org.jruchel.carworkshop.entities.Client;
+import org.jruchel.carworkshop.entities.ClientOrderPair;
 import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.MailingService;
@@ -31,11 +32,11 @@ public class OrderController {
         this.clientService = clientService;
         this.mailingService = mailingService;
     }
-
-
+    
     @PostMapping("/add")
-    public ResponseEntity<String> addOrder(@RequestBody Order order) {
-        Client client = order.getClient();
+    public ResponseEntity<String> addOrder(@RequestBody ClientOrderPair clientOrderPair) {
+        Client client = clientOrderPair.getClient();
+        Order order = clientOrderPair.getOrder();
         if (client == null) return new ResponseEntity<>("Client cannot be empty.", HttpStatus.CONFLICT);
         if (client.getEmail() == null)
             return new ResponseEntity<>("Client's email cannot be empty.", HttpStatus.CONFLICT);
@@ -54,6 +55,7 @@ public class OrderController {
                 order.setClient(clientFromDB);
             }
             order.setDate(new Date());
+            if (order.getClient() == null) order.setClient(client);
             orderService.save(order);
             mailingService.sendEmail(order.getClient().getEmail(), properties.readProperty("mailing.generic.subject"), properties.readProperty("mailing.generic.content"), true);
         } catch (Exception ex) {

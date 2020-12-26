@@ -19,25 +19,14 @@ import java.util.List;
 @RequestMapping("/moderator")
 public class ModeratorController {
 
+    @Autowired
     private ClientService clientService;
-
+    @Autowired
     private OrderService orderService;
-
-    private final MailingService mailingService;
-
-    public ModeratorController(MailingService mailingService) {
-        this.mailingService = mailingService;
-    }
-
     @Autowired
-    public ModeratorController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+    private MailingService mailingService;
 
-    @Autowired
-    public ModeratorController(ClientService clientService) {
-        this.clientService = clientService;
-    }
+
 
     @GetMapping("/unresponded/clients")
     public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {

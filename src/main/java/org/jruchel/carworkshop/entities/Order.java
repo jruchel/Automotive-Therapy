@@ -1,5 +1,6 @@
 package org.jruchel.carworkshop.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.jruchel.carworkshop.validation.order.ClientConstraint;
@@ -21,6 +22,7 @@ public class Order {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_id")
     @ClientConstraint
+    @JsonIgnore
     private Client client;
     @Column(name = "responded")
     private boolean responed;
