@@ -11,6 +11,10 @@ public class EmailValidator extends Validator<EmailConstraint, String> {
 
     protected boolean Constraint_matchesEmailPattern(String value) {
         try {
+            if(value.isEmpty()) {
+                addMessage("Email cannot be empty");
+                return false;
+            }
             boolean result = value.matches(properties.readProperty("pattern.email"));
             if(!result) addMessage("Invalid email.");
             return result;

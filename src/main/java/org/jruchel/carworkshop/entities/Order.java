@@ -31,5 +31,7 @@ public class Order {
     @Column(name = "date")
     @DateConstraint
     private Date date;
+    @Column(name = "complete")
+    private boolean complete;
 
 }

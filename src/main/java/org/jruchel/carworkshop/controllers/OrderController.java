@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Date;
 
 @CrossOrigin
@@ -32,30 +35,35 @@ public class OrderController {
         this.clientService = clientService;
         this.mailingService = mailingService;
     }
-    
+
     @PostMapping("/add")
     public ResponseEntity<String> addOrder(@RequestBody ClientOrderPair clientOrderPair) {
         Client client = clientOrderPair.getClient();
         Order order = clientOrderPair.getOrder();
         if (client == null) return new ResponseEntity<>("Client cannot be empty.", HttpStatus.CONFLICT);
-        if (client.getEmail() == null)
-            return new ResponseEntity<>("Client's email cannot be empty.", HttpStatus.CONFLICT);
         if (client.getPhoneNumber() == null) client.setPhoneNumber("");
-        if ((client.getEmail().isEmpty() && client.getPhoneNumber().isEmpty()))
-            return new ResponseEntity<>("Client must not be empty.", HttpStatus.CONFLICT);
         try {
+            //Checking if the client already exists in the database
             Client clientFromDB = clientService.findByEmail(client.getEmail());
+            //If not using the client object to add the new client to the database
             if (clientFromDB == null) {
                 client.addOrder(order);
             } else {
                 clientFromDB.addOrder(order);
-                if (client.getPhoneNumber() != null && !client.getPhoneNumber().isEmpty()) {
+                //Only updating the phone number if it changes to another valid phone number
+                if (client.getPhoneNumber() != null && !client.getPhoneNumber().isEmpty() && client.getPhoneNumber().matches(Properties.getInstance().readProperty("pattern.phone"))) {
                     clientFromDB.setPhoneNumber(client.getPhoneNumber());
+                }
+                //Making sure an order like this isn't already in the database
+                if (clientFromDB.getOrders().stream().anyMatch(o -> o.getDescription().equals(order.getDescription()) && !o.isComplete())) {
+                    return new ResponseEntity<>("You already have an identical awaiting order", HttpStatus.CONFLICT);
                 }
                 order.setClient(clientFromDB);
             }
             order.setDate(new Date());
+            //If the client is null it means they weren't found in the database, adding new client
             if (order.getClient() == null) order.setClient(client);
+            order.getClient().setLastOrder(new Date());
             orderService.save(order);
             mailingService.sendEmail(order.getClient().getEmail(), properties.readProperty("mailing.generic.subject"), properties.readProperty("mailing.generic.content"), true);
         } catch (Exception ex) {
@@ -63,7 +71,6 @@ public class OrderController {
             if (message.isEmpty()) message = ex.getMessage();
             return new ResponseEntity<>(message, HttpStatus.NOT_ACCEPTABLE);
         }
-        return new ResponseEntity<>("Order has been submited successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Order has been submitted successfully", HttpStatus.OK);
     }
-
 }

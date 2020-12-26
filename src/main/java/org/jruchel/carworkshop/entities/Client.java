@@ -1,6 +1,5 @@
 package org.jruchel.carworkshop.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.jruchel.carworkshop.validation.client.EmailConstraint;
@@ -8,6 +7,7 @@ import org.jruchel.carworkshop.validation.client.PhoneNumberConstraint;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -28,6 +28,8 @@ public class Client {
     @EmailConstraint
     private String email;
     private boolean newsLetter;
+    @Column(name = "last_order_date")
+    private Date lastOrder;
 
     public Client() {
         this.orders = new ArrayList<>();
