@@ -32,7 +32,7 @@ public class ModeratorController {
         this.errorPasser = ValidationErrorPasser.getInstance();
     }
 
-    @PostMapping("/moderator/add")
+    @PostMapping("/add")
     public ResponseEntity<String> addClient(@RequestBody Client client) {
         for (Order order : client.getOrders()) {
             order.setClient(client);

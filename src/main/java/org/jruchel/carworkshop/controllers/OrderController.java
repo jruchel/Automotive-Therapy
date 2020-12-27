@@ -38,7 +38,7 @@ public class OrderController {
         return addOrder(clientOrderPair, false);
     }
 
-    @PostMapping("/moderator/orders/add")
+    @PostMapping("/moderator/add")
     public ResponseEntity<String> addOrderAsModerator(@RequestBody ClientOrderPair clientOrderPair) {
         return addOrder(clientOrderPair, true);
     }
