@@ -32,6 +32,22 @@ public class ModeratorController {
         this.errorPasser = ValidationErrorPasser.getInstance();
     }
 
+    @PostMapping("/moderator/add")
+    public ResponseEntity<String> addClient(@RequestBody Client client) {
+        for (Order order : client.getOrders()) {
+            order.setClient(client);
+        }
+        if (clientService.findByPhone(client.getPhoneNumber()) != null || clientService.findByEmail(client.getEmail()) != null)
+            return new ResponseEntity<>("This client already exists in the database", HttpStatus.CONFLICT);
+        try {
+            clientService.save(client);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(errorPasser.getMessagesAsString(), HttpStatus.NOT_ACCEPTABLE);
+        }
+        if (clientService.findByPhone(client.getPhoneNumber()) != null || clientService.findByEmail(client.getEmail()) != null)
+            return new ResponseEntity<>("Client added successfully to the database", HttpStatus.OK);
+        return new ResponseEntity<>("Failed to add client to the database", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     @GetMapping("/unresponded/clients")
     public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
