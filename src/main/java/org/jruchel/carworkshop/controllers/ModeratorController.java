@@ -7,12 +7,11 @@ import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.MailingService;
 import org.jruchel.carworkshop.services.OrderService;
 import org.jruchel.carworkshop.utils.Properties;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jruchel.carworkshop.validation.ValidationErrorPasser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,12 +20,18 @@ import java.util.List;
 @RequestMapping("/moderator")
 public class ModeratorController {
 
-    @Autowired
-    private ClientService clientService;
-    @Autowired
-    private OrderService orderService;
-    @Autowired
-    private MailingService mailingService;
+    private final ClientService clientService;
+    private final OrderService orderService;
+    private final MailingService mailingService;
+    private final ValidationErrorPasser errorPasser;
+
+    public ModeratorController(ClientService clientService, OrderService orderService, MailingService mailingService) {
+        this.clientService = clientService;
+        this.orderService = orderService;
+        this.mailingService = mailingService;
+        this.errorPasser = ValidationErrorPasser.getInstance();
+    }
+
 
     @GetMapping("/unresponded/clients")
     public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
@@ -76,7 +81,6 @@ public class ModeratorController {
             Email mail = new Email();
             mail.setTo(order.getClient().getEmail());
             try {
-
                 mail.setSubject(Properties.getInstance().readProperty("mailing.complete.subject"));
                 Properties properties = Properties.getInstance();
                 String address = properties.readProperty("workshop.address");

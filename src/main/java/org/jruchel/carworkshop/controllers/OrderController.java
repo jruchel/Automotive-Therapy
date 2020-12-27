@@ -11,6 +11,7 @@ import org.jruchel.carworkshop.validation.ValidationErrorPasser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Date;
 
 @CrossOrigin
@@ -34,6 +35,15 @@ public class OrderController {
 
     @PostMapping("/add")
     public ResponseEntity<String> addOrder(@RequestBody ClientOrderPair clientOrderPair) {
+        return addOrder(clientOrderPair, false);
+    }
+
+    @PostMapping("/moderator/orders/add")
+    public ResponseEntity<String> addOrderAsModerator(@RequestBody ClientOrderPair clientOrderPair) {
+        return addOrder(clientOrderPair, true);
+    }
+
+    private ResponseEntity<String> addOrder(ClientOrderPair clientOrderPair, boolean moderator) {
         Client client = clientOrderPair.getClient();
         Order order = clientOrderPair.getOrder();
         if (client == null) return new ResponseEntity<>("Client cannot be empty.", HttpStatus.CONFLICT);
@@ -61,7 +71,8 @@ public class OrderController {
             if (order.getClient() == null) order.setClient(client);
             order.getClient().setLastOrder(new Date());
             orderService.save(order);
-            mailingService.sendEmail(order.getClient().getEmail(), properties.readProperty("mailing.generic.subject"), properties.readProperty("mailing.generic.content"), true);
+            if (!moderator)
+                mailingService.sendEmail(order.getClient().getEmail(), properties.readProperty("mailing.generic.subject"), properties.readProperty("mailing.generic.content"), true);
         } catch (Exception ex) {
             String message = errorPasser.getMessagesAsString();
             if (message.isEmpty()) message = ex.getMessage();
