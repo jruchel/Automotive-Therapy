@@ -3,7 +3,6 @@ package org.jruchel.carworkshop.utils;
 import org.jruchel.carworkshop.entities.Client;
 import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.services.ClientService;
-import org.jruchel.carworkshop.services.OrderService;
 import org.jruchel.carworkshop.utils.random.MyRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Consumer;
 
 @Component
 public class Initializer {
