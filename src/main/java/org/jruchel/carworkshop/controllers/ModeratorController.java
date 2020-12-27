@@ -32,11 +32,6 @@ public class ModeratorController {
         this.errorPasser = ValidationErrorPasser.getInstance();
     }
 
-    @GetMapping("/hello")
-    public ResponseEntity<String> sayHello() {
-        return new ResponseEntity<>("Hello!", HttpStatus.OK);
-    }
-
     @PostMapping("/add")
     public ResponseEntity<String> addClient(@RequestBody Client client) {
         for (Order order : client.getOrders()) {
