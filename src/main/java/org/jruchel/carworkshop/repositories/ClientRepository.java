@@ -16,7 +16,7 @@ public interface ClientRepository extends PagingAndSortingRepository<Client, Int
     @Query(nativeQuery = true, value = "select * from client where email = ?1 limit 1")
     Client findByEmail(String email);
 
-    @Query(nativeQuery = true, value = "SELECT * from client where client.id in (select distinct orders.client_id from orders where orders.responded = true)")
+    @Query(nativeQuery = true, value = "SELECT * from client where client.id in (select distinct orders.client_id from orders where orders.responded = false)")
     List<Client> getUnrespondedClients(Pageable pageable);
 
     @Query(nativeQuery = true, value = "select * from client where client.id in (select distinct orders.client_id from orders where orders.responded = true and orders.complete = false)")
