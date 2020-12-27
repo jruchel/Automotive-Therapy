@@ -18,4 +18,7 @@ public interface ClientRepository extends PagingAndSortingRepository<Client, Int
 
     @Query(nativeQuery = true, value = "SELECT * from carworkshop.client where carworkshop.client.id in (select distinct carworkshop.orders.client_id from carworkshop.orders where carworkshop.orders.responded = 0)")
     List<Client> getUnrespondedClients(Pageable pageable);
+
+    @Query(nativeQuery = true, value = "select * from carworkshop.client where carworkshop.client.id in (select distinct carworkshop.orders.client_id from orders where orders.responded = 1 and orders.complete = 0)")
+    List<Client> getAwaitingClients(Pageable pageable);
 }

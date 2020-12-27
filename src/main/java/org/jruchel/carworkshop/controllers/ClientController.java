@@ -23,7 +23,6 @@ public class ClientController {
         this.errorPasser = ValidationErrorPasser.getInstance();
     }
 
-
     @PostMapping("/add")
     public ResponseEntity<String> addClient(@RequestBody Client client) {
         for (Order order : client.getOrders()) {
@@ -39,12 +38,6 @@ public class ClientController {
         if (clientService.findByPhone(client.getPhoneNumber()) != null || clientService.findByEmail(client.getEmail()) != null)
             return new ResponseEntity<>("Client added successfully to the database", HttpStatus.OK);
         return new ResponseEntity<>("Failed to add client to the database", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @GetMapping("/get/{email}")
-    public ResponseEntity<List<Order>> getClientsOrders(@PathVariable String email) {
-        Client client = clientService.findByEmail(email);
-        return new ResponseEntity<>(client.getOrders(), HttpStatus.OK);
     }
 
 }

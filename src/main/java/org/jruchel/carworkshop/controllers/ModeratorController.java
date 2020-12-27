@@ -6,12 +6,14 @@ import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.MailingService;
 import org.jruchel.carworkshop.services.OrderService;
+import org.jruchel.carworkshop.utils.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin
@@ -26,15 +28,12 @@ public class ModeratorController {
     @Autowired
     private MailingService mailingService;
 
-
-
     @GetMapping("/unresponded/clients")
     public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
         if (page < 1) page = 1;
         if (elements < 1) elements = 1;
         return new ResponseEntity<>(clientService.getUnrespondedClients(page, elements), HttpStatus.OK);
     }
-
 
     @GetMapping("/unresponded/orders")
     public ResponseEntity<List<Order>> getUnrespondedOrders(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
@@ -54,19 +53,45 @@ public class ModeratorController {
         }
     }
 
-    @GetMapping("/client")
-    public ResponseEntity<Client> getUnrespondedOrders(@RequestParam(value = "id") Integer id, @PathParam(value = "email") String email) {
-        Client client = null;
-        if (id != null) client = clientService.findById(id);
-        if (client == null) client = clientService.findByEmail(email);
-        return new ResponseEntity<>(client, HttpStatus.OK);
-    }
-
-    @PostMapping("/order/respond")
-    public ResponseEntity<Order> respondeToOrder(@RequestBody int orderID) {
+    @PostMapping("/orders/respond")
+    public ResponseEntity<Order> respondToOrder(@RequestBody int orderID) {
         Order order = orderService.findById(orderID);
         order.setResponed(true);
         orderService.save(order);
         return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @GetMapping("/clients/awaiting")
+    public ResponseEntity<List<Client>> getAwaitingClients(@RequestParam(required = false, defaultValue = "1", name = "page") int page, @RequestParam(required = false, defaultValue = "1", name = "elements") int elements) {
+        return new ResponseEntity<>(clientService.getAwaitingClients(page, elements), HttpStatus.OK);
+    }
+
+    @PostMapping("/orders/complete")
+    public ResponseEntity<Order> completeOrder(@RequestBody int orderID) {
+        try {
+            Order order = orderService.findById(orderID);
+            order.setComplete(true);
+            order.setResponed(true);
+            orderService.save(order);
+            Email mail = new Email();
+            mail.setTo(order.getClient().getEmail());
+            try {
+
+                mail.setSubject(Properties.getInstance().readProperty("mailing.complete.subject"));
+                Properties properties = Properties.getInstance();
+                String address = properties.readProperty("workshop.address");
+                String workingHours = properties.readProperty("workshop.working-hours");
+                String message = String.format(properties.readProperty("mailing.complete.content"), address, workingHours);
+                mail.setMessage(message);
+            } catch (IOException e) {
+                mail.setSubject("Powiadomienie o zakonczeniu.");
+                mail.setMessage("Samochod jest gotowy do odbioru.");
+            }
+
+            mailingService.sendEmail(mail, true);
+            return new ResponseEntity<>(order, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

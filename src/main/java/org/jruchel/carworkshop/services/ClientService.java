@@ -39,7 +39,13 @@ public class ClientService {
         return clientRepository.getUnrespondedClients(PageRequest.of(page - 1, elements));
     }
 
+    public List<Client> getAwaitingClients(int page, int elements) {
+        return clientRepository.getAwaitingClients(PageRequest.of(page - 1, elements));
+    }
+
     public void save(Client client) {
         clientRepository.save(client);
     }
+
+
 }
