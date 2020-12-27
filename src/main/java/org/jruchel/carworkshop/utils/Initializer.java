@@ -55,6 +55,6 @@ public class Initializer {
 
     @PostConstruct
     private void initialize() {
-        createRandomClients(MyRandom.getRandom(50, 100)).forEach(c -> clientService.save(c));
+        //createRandomClients(MyRandom.getRandom(50, 100)).forEach(c -> clientService.save(c));
     }
 }
