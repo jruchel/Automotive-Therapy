@@ -55,15 +55,15 @@ public class OrderController {
             if (clientFromDB == null) {
                 client.addOrder(order);
             } else {
+                if (clientFromDB.getOrders().stream().anyMatch(o -> o.getDescription().equals(order.getDescription()) && !o.isComplete())) {
+                    return new ResponseEntity<>("You already have an identical awaiting order", HttpStatus.CONFLICT);
+                }
                 clientFromDB.addOrder(order);
                 //Only updating the phone number if it changes to another valid phone number
                 if (client.getPhoneNumber() != null && !client.getPhoneNumber().isEmpty() && client.getPhoneNumber().matches(Properties.getInstance().readProperty("pattern.phone"))) {
                     clientFromDB.setPhoneNumber(client.getPhoneNumber());
                 }
                 //Making sure an order like this isn't already in the database
-                if (clientFromDB.getOrders().stream().anyMatch(o -> o.getDescription().equals(order.getDescription()) && !o.isComplete())) {
-                    return new ResponseEntity<>("You already have an identical awaiting order", HttpStatus.CONFLICT);
-                }
                 order.setClient(clientFromDB);
             }
             order.setDate(new Date());
