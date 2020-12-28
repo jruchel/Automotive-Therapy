@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface OpinionRepository extends CrudRepository<Opinion, Integer> {
 
-    @Query(nativeQuery = true, value = "select * from opinions limit ?1 order by stars desc")
+    @Query(nativeQuery = true, value = "select * from opinions order by stars desc limit 2")
     List<Opinion> getOpinions(int amount);
 
 }
