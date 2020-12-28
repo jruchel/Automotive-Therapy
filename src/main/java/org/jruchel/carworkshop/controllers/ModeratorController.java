@@ -7,12 +7,15 @@ import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.MailingService;
 import org.jruchel.carworkshop.services.OrderService;
 import org.jruchel.carworkshop.utils.Properties;
+import org.jruchel.carworkshop.utils.SortingUtils;
 import org.jruchel.carworkshop.validation.ValidationErrorPasser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin
@@ -53,7 +56,17 @@ public class ModeratorController {
     public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
         if (page < 1) page = 1;
         if (elements < 1) elements = 1;
-        return new ResponseEntity<>(clientService.getUnrespondedClients(page, elements), HttpStatus.OK);
+        List<Client> clients = clientService.getUnrespondedClientsSorted(page, elements);
+        /*for (Client c : clients) {
+            List<Order> clientOrders = c.getOrders();
+            clientOrders = SortingUtils.sort(clientOrders, (o1, o2) -> {
+                Date d1 = o1.getDate();
+                Date d2 = o2.getDate();
+                return d1.compareTo(d2);
+            });
+            c.setOrders(clientOrders);
+        }*/
+        return new ResponseEntity<>(clients, HttpStatus.OK);
     }
 
     @GetMapping("/orders/unresponded")

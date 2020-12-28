@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 @Repository
@@ -21,4 +22,13 @@ public interface ClientRepository extends PagingAndSortingRepository<Client, Int
 
     @Query(nativeQuery = true, value = "select * from client where client.id in (select distinct orders.client_id from orders where orders.responded = true and orders.complete = false)")
     List<Client> getAwaitingClients(Pageable pageable);
+
+    @Query(nativeQuery = true, value = "select distinct client_id, date into clients_by_latest_order from orders where responded = false order by date")
+    void createClientsByLatestOrderUnresponded();
+
+    @Query(nativeQuery = true, value = "drop table clients_by_latest_order")
+    void dropClientsByLatestOrder();
+
+    @Query(nativeQuery = true, value = "select client_id from clients_by_latest_order")
+    List<Integer> getClientsByLatestOrder(Pageable pageable);
 }
