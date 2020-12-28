@@ -58,9 +58,9 @@ public class ModeratorController {
         if (elements < 1) elements = 1;
         List<Client> clients = clientService.getUnrespondedClients(page, elements);
         for (Client c : clients) {
-            c.setOrders(sortOrdersByDate(c.getOrders(), true));
+            c.setOrders(sortOrdersByDate(c.getOrders(), false));
         }
-        return new ResponseEntity<>(sortClientsByDate(clients, true), HttpStatus.OK);
+        return new ResponseEntity<>(sortClientsByDate(clients, false), HttpStatus.OK);
     }
 
     @GetMapping("/orders/unresponded")
@@ -96,9 +96,9 @@ public class ModeratorController {
         if (page < 1 && page != 0) page = 1;
         List<Client> clients = clientService.getAwaitingClients(page, elements);
         for (Client c : clients) {
-            c.setOrders(sortOrdersByDate(c.getOrders(), true));
+            c.setOrders(sortOrdersByDate(c.getOrders(), false));
         }
-        return new ResponseEntity<>(sortClientsByDate(clients, true), HttpStatus.OK);
+        return new ResponseEntity<>(sortClientsByDate(clients, false), HttpStatus.OK);
     }
 
     @PostMapping("/orders/complete")
