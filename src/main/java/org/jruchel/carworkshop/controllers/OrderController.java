@@ -73,7 +73,7 @@ public class OrderController {
             order.getClient().setLastOrder(new Date());
             orderService.save(order);
             if (!moderator)
-                mailingService.sendEmail(order.getClient().getEmail(), properties.readProperty("mailing.generic.subject"), properties.readProperty("mailing.generic.content"), true, true);
+                mailingService.sendEmail(order.getClient().getEmail(), properties.readProperty("mailing.generic.subject"), properties.readProperty("mailing.generic.content"), true);
         } catch (Exception ex) {
             String message = errorPasser.getMessagesAsString();
             if (message.isEmpty()) message = ex.getMessage();
