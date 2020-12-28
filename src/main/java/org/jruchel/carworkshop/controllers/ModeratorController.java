@@ -57,7 +57,7 @@ public class ModeratorController {
         if (page < 1) page = 1;
         if (elements < 1) elements = 1;
         List<Client> clients = clientService.getUnrespondedClientsSorted(page, elements);
-        /*for (Client c : clients) {
+        for (Client c : clients) {
             List<Order> clientOrders = c.getOrders();
             clientOrders = SortingUtils.sort(clientOrders, (o1, o2) -> {
                 Date d1 = o1.getDate();
@@ -65,7 +65,7 @@ public class ModeratorController {
                 return d1.compareTo(d2);
             });
             c.setOrders(clientOrders);
-        }*/
+        }
         return new ResponseEntity<>(clients, HttpStatus.OK);
     }
 
