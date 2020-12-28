@@ -46,7 +46,8 @@ public class OrderController {
     private ResponseEntity<String> addOrder(ClientOrderPair clientOrderPair, boolean moderator) {
         Client client = clientOrderPair.getClient();
         Order order = clientOrderPair.getOrder();
-        if (client == null) return new ResponseEntity<>("Client cannot be empty.", HttpStatus.CONFLICT);
+        if (client == null)
+            return new ResponseEntity<>("Dane kontaktowe muszą zostać wypełnione.", HttpStatus.CONFLICT);
         if (client.getPhoneNumber() == null) client.setPhoneNumber("");
         try {
             //Checking if the client already exists in the database
@@ -56,7 +57,7 @@ public class OrderController {
                 client.addOrder(order);
             } else {
                 if (clientFromDB.getOrders().stream().anyMatch(o -> o.getDescription().equals(order.getDescription()) && !o.isComplete())) {
-                    return new ResponseEntity<>("You already have an identical awaiting order", HttpStatus.CONFLICT);
+                    return new ResponseEntity<>("Na twoim koncie znajduje się już identyczne zlecenie.", HttpStatus.CONFLICT);
                 }
                 clientFromDB.addOrder(order);
                 //Only updating the phone number if it changes to another valid phone number
@@ -78,6 +79,6 @@ public class OrderController {
             if (message.isEmpty()) message = ex.getMessage();
             return new ResponseEntity<>(message, HttpStatus.NOT_ACCEPTABLE);
         }
-        return new ResponseEntity<>("Order has been submitted successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Zlecenie zostało zapisane.", HttpStatus.OK);
     }
 }

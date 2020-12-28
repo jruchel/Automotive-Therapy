@@ -7,16 +7,16 @@ import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.MailingService;
 import org.jruchel.carworkshop.services.OrderService;
 import org.jruchel.carworkshop.utils.Properties;
-import org.jruchel.carworkshop.utils.SortingUtils;
 import org.jruchel.carworkshop.validation.ValidationErrorPasser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -41,39 +41,35 @@ public class ModeratorController {
             order.setClient(client);
         }
         if (clientService.findByPhone(client.getPhoneNumber()) != null || clientService.findByEmail(client.getEmail()) != null)
-            return new ResponseEntity<>("This client already exists in the database", HttpStatus.CONFLICT);
+            return new ResponseEntity<>("Ten klient jest już wpisany do bazy danych", HttpStatus.CONFLICT);
         try {
             clientService.save(client);
         } catch (Exception ex) {
             return new ResponseEntity<>(errorPasser.getMessagesAsString(), HttpStatus.NOT_ACCEPTABLE);
         }
         if (clientService.findByPhone(client.getPhoneNumber()) != null || clientService.findByEmail(client.getEmail()) != null)
-            return new ResponseEntity<>("Client added successfully to the database", HttpStatus.OK);
-        return new ResponseEntity<>("Failed to add client to the database", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Klient został dodany do bazy danych", HttpStatus.OK);
+        return new ResponseEntity<>("Błąd dowawania klienta do bazy danych", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping("/clients/unresponded")
-    public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
-        if (page < 1) page = 1;
+    public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "0", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
+        if (page < 1 && page != 0) page = 1;
         if (elements < 1) elements = 1;
-        List<Client> clients = clientService.getUnrespondedClientsSorted(page, elements);
+        List<Client> clients = clientService.getUnrespondedClients(page, elements);
         for (Client c : clients) {
-            List<Order> clientOrders = c.getOrders();
-            clientOrders = SortingUtils.sort(clientOrders, (o1, o2) -> {
-                Date d1 = o1.getDate();
-                Date d2 = o2.getDate();
-                return d1.compareTo(d2);
-            });
-            c.setOrders(clientOrders);
+            c.setOrders(sortOrdersByDate(c.getOrders(), true));
         }
-        return new ResponseEntity<>(clients, HttpStatus.OK);
+        return new ResponseEntity<>(sortClientsByDate(clients, true), HttpStatus.OK);
     }
 
     @GetMapping("/orders/unresponded")
     public ResponseEntity<List<Order>> getUnrespondedOrders(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
         if (page < 1) page = 1;
         if (elements < 1) elements = 1;
-        return new ResponseEntity<>(orderService.getUnrespondedOrders(page, elements), HttpStatus.OK);
+        List<Order> orders = orderService.getUnrespondedOrders(page, elements);
+        orders = sortOrdersByDate(orders, false);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
     @PostMapping("/mail")
@@ -81,7 +77,7 @@ public class ModeratorController {
         try {
             email.setFrom(org.jruchel.carworkshop.utils.Properties.getInstance().readProperty("mail.sender"));
             mailingService.sendEmail(email, false);
-            return new ResponseEntity<>("Message sent.", HttpStatus.OK);
+            return new ResponseEntity<>("Wiadomość wysłana.", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
@@ -96,8 +92,13 @@ public class ModeratorController {
     }
 
     @GetMapping("/clients/awaiting")
-    public ResponseEntity<List<Client>> getAwaitingClients(@RequestParam(required = false, defaultValue = "1", name = "page") int page, @RequestParam(required = false, defaultValue = "1", name = "elements") int elements) {
-        return new ResponseEntity<>(clientService.getAwaitingClients(page, elements), HttpStatus.OK);
+    public ResponseEntity<List<Client>> getAwaitingClients(@RequestParam(required = false, defaultValue = "0", name = "page") int page, @RequestParam(required = false, defaultValue = "10", name = "elements") int elements) {
+        if (page < 1 && page != 0) page = 1;
+        List<Client> clients = clientService.getAwaitingClients(page, elements);
+        for (Client c : clients) {
+            c.setOrders(sortOrdersByDate(c.getOrders(), true));
+        }
+        return new ResponseEntity<>(sortClientsByDate(clients, true), HttpStatus.OK);
     }
 
     @PostMapping("/orders/complete")
@@ -125,6 +126,40 @@ public class ModeratorController {
             return new ResponseEntity<>(order, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private List<Order> sortOrdersByDate(List<Order> orders, boolean descending) {
+        return orders.stream().sorted((o1, o2) -> {
+            int multiplier = descending ? -1 : 1;
+            return multiplier * o1.getDate().compareTo(o2.getDate());
+        }).collect(Collectors.toList());
+    }
+
+    /**
+     * Sorts the given list of clients by each of the clients' first order on the list
+     * It's recommended to use this method in conjunction with sortOrdersByDate so that both clients and their orders display in the desired order
+     *
+     * @param clients    clients to sort
+     * @param descending wether or not in descending order
+     * @return The same list of clients, sorted
+     */
+    private List<Client> sortClientsByDate(List<Client> clients, boolean descending) {
+        return clients.stream().sorted((o1, o2) -> {
+            int multiplier = descending ? -1 : 1;
+            Order order1 = getOrderDateExtremum(o1.getOrders(), descending);
+            if (order1 == null) order1 = o1.getOrders().get(0);
+            Order order2 = getOrderDateExtremum(o2.getOrders(), descending);
+            if (order2 == null) order2 = o2.getOrders().get(0);
+            return multiplier * order1.getDate().compareTo(order2.getDate());
+        }).collect(Collectors.toList());
+    }
+
+    private Order getOrderDateExtremum(List<Order> orders, boolean highest) {
+        if (highest) {
+            return orders.stream().max(Comparator.comparing(Order::getDate)).orElse(null);
+        } else {
+            return orders.stream().min(Comparator.comparing(Order::getDate)).orElse(null);
         }
     }
 }
