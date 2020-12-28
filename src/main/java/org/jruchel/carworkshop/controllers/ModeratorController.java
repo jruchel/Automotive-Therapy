@@ -115,7 +115,7 @@ public class ModeratorController {
                 String address = properties.readProperty("workshop.address");
                 String workingHours = properties.readProperty("workshop.working-hours");
                 String message = String.format(properties.readProperty("mailing.complete.content"), address, workingHours);
-                message += String.format("\nJeżeli chcesz, możesz wystawić nam opinię, pod tym adresem: \n%s", String.format("https://%s%s", properties.readProperty("frontend.domain.name"), properties.readProperty("frontend.opinion.form")));
+                message += String.format("\n\nJeżeli chcesz, możesz wystawić nam opinię, pod tym adresem: \n\n%s", String.format("https://%s%s", properties.readProperty("frontend.domain.name"), properties.readProperty("frontend.opinion.form")));
                 mail.setMessage(message);
             } catch (IOException e) {
                 mail.setSubject("Powiadomienie o zakonczeniu.");
