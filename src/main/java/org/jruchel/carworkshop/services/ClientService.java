@@ -1,15 +1,12 @@
 package org.jruchel.carworkshop.services;
 
 import org.jruchel.carworkshop.entities.Client;
-import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ClientService {
@@ -39,28 +36,16 @@ public class ClientService {
     }
 
     public List<Client> getUnrespondedClients(int page, int elements) {
+        if (page < 1) {
+            return clientRepository.getUnrespondedClients();
+        }
         return clientRepository.getUnrespondedClients(PageRequest.of(page - 1, elements));
     }
 
-    public List<Client> getUnrespondedClientsSorted(int page, int elements) {
-        try {
-            clientRepository.createClientsByLatestOrderUnresponded();
-        } catch (Exception ignored) {
-
-        }
-        List<Integer> resultIds = clientRepository.getClientsByLatestOrder(PageRequest.of(page - 1, elements));
-
-        List<Client> result = new ArrayList<>();
-        resultIds.forEach(i -> result.add(clientRepository.findById(i).orElse(null)));
-        try {
-            clientRepository.dropClientsByLatestOrder();
-        } catch (Exception ignored) {
-
-        }
-        return result;
-    }
-
     public List<Client> getAwaitingClients(int page, int elements) {
+        if (page < 1) {
+            return clientRepository.getAwaitingClients();
+        }
         return clientRepository.getAwaitingClients(PageRequest.of(page - 1, elements));
     }
 
