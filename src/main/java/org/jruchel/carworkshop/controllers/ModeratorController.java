@@ -11,6 +11,7 @@ import org.jruchel.carworkshop.validation.ValidationErrorPasser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -114,6 +115,7 @@ public class ModeratorController {
                 String address = properties.readProperty("workshop.address");
                 String workingHours = properties.readProperty("workshop.working-hours");
                 String message = String.format(properties.readProperty("mailing.complete.content"), address, workingHours);
+                message += String.format("\nJeżeli chcesz, możesz wystawić nam opinię, pod tym adresem: \n%s", String.format("https://%s%s", properties.readProperty("frontend.domain.name"), properties.readProperty("frontend.opinion.form")));
                 mail.setMessage(message);
             } catch (IOException e) {
                 mail.setSubject("Powiadomienie o zakonczeniu.");

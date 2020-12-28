@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/opinions")
 public class OpinionController {
@@ -29,6 +30,9 @@ public class OpinionController {
     @PostMapping("/post")
     public ResponseEntity<String> addOpinion(@RequestBody Opinion opinion) {
         try {
+            if (opinion.getName() == null || opinion.getName().isEmpty()) {
+                opinion.setName("Anonim");
+            }
             opinionService.save(opinion);
             return new ResponseEntity<>("Ocena została wysłana", HttpStatus.OK);
         } catch (Exception ex) {
