@@ -31,6 +31,7 @@ public class Client {
     @Column(name = "last_order_date")
     private Date lastOrder;
 
+
     public Client() {
         this.orders = new ArrayList<>();
         this.newsLetter = false;
@@ -38,5 +39,6 @@ public class Client {
 
     public void addOrder(Order order) {
         orders.add(order);
+        order.setClient(this);
     }
 }
