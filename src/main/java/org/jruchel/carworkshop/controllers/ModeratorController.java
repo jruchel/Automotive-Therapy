@@ -49,14 +49,14 @@ public class ModeratorController {
         return new ResponseEntity<>("Failed to add client to the database", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping("/unresponded/clients")
+    @GetMapping("/clients/unresponded")
     public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
         if (page < 1) page = 1;
         if (elements < 1) elements = 1;
         return new ResponseEntity<>(clientService.getUnrespondedClients(page, elements), HttpStatus.OK);
     }
 
-    @GetMapping("/unresponded/orders")
+    @GetMapping("/orders/unresponded")
     public ResponseEntity<List<Order>> getUnrespondedOrders(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
         if (page < 1) page = 1;
         if (elements < 1) elements = 1;
