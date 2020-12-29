@@ -1,32 +1,26 @@
 package org.jruchel.carworkshop.controllers;
 
 import org.jruchel.carworkshop.entities.User;
+import org.jruchel.carworkshop.services.SecurityService;
+import org.jruchel.carworkshop.services.UserService;
 import org.jruchel.carworkshop.utils.Properties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/security")
 public class SecurityController {
 
-    @PostMapping("/logIn")
-    public ResponseEntity<Boolean> logIn(@RequestBody User user) {
-        return new ResponseEntity<>(validateUser(user), HttpStatus.OK);
-    }
+    @Autowired
+    private SecurityService securityService;
+    @Autowired
+    private UserService userService;
 
-    private boolean validateUser(User user) {
-        Properties properties = Properties.getInstance();
-        try {
-            String username = properties.readProperty("moderator.username");
-            String password = properties.readProperty("moderator.password");
-            return username.equals(user.getUsername()) && password.equals(user.getPassword());
-        } catch (IOException e) {
-            return false;
-        }
+    @PostMapping("/login")
+    public ResponseEntity<Boolean> login(@RequestBody User user) {
+        return new ResponseEntity<>(securityService.login(user.getUsername(), user.getPassword()), HttpStatus.OK);
     }
-
 }

@@ -2,21 +2,28 @@ package org.jruchel.carworkshop.utils;
 
 import org.jruchel.carworkshop.entities.Client;
 import org.jruchel.carworkshop.entities.Order;
+import org.jruchel.carworkshop.entities.Role;
+import org.jruchel.carworkshop.entities.User;
 import org.jruchel.carworkshop.services.ClientService;
+import org.jruchel.carworkshop.services.RoleService;
+import org.jruchel.carworkshop.services.SecurityService;
+import org.jruchel.carworkshop.services.UserService;
 import org.jruchel.carworkshop.utils.random.MyRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.io.IOException;
+import java.util.*;
 
 @Component
 public class Initializer {
     @Autowired
     private ClientService clientService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private SecurityService securityService;
 
     private List<Client> createRandomClients(int amount) {
         List<Client> list = new ArrayList<>();
@@ -29,6 +36,26 @@ public class Initializer {
             }
         }
         return list;
+    }
+
+    private void createRoles() {
+        createRole("moderator");
+    }
+
+    private void createRole(String title) {
+        if (roleService.getRoleByTitle(title) == null) {
+            Role moderator = new Role();
+            moderator.setTitle(title);
+            roleService.save(moderator);
+        }
+    }
+
+    private void createModerator(String username, String password) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.grantRole(roleService.getRoleByTitle("moderator"));
+        securityService.register(user);
     }
 
     private Client createRandomUser() {
@@ -53,6 +80,13 @@ public class Initializer {
 
     @PostConstruct
     private void initialize() {
-        createRandomClients(MyRandom.getRandom(50, 100)).forEach(c -> clientService.save(c));
+        createRoles();
+        Properties properties = Properties.getInstance();
+        try {
+            createModerator(properties.readProperty("moderator.username"), properties.readProperty("moderator.password"));
+        } catch (IOException e) {
+            createModerator("admin", "admin1");
+        }
+        //createRandomClients(MyRandom.getRandom(25, 40)).forEach(c -> clientService.save(c));
     }
 }
