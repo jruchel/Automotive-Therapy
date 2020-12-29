@@ -86,12 +86,5 @@ public class Initializer {
     @PostConstruct
     private void initialize() {
         createRoles();
-        org.jruchel.carworkshop.configuration.Properties properties = Properties.getInstance();
-        try {
-            createModerator(properties.readProperty("moderator.username"), properties.readProperty("moderator.password"));
-        } catch (IOException e) {
-            createModerator("admin", "admin1");
-        }
-        //createRandomClients(MyRandom.getRandom(25, 40)).forEach(c -> clientService.save(c));
     }
 }
