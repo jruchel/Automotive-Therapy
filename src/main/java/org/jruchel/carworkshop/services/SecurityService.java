@@ -29,6 +29,7 @@ public class SecurityService {
 
     private boolean validate(String username, String password) {
         UserDetails fromDB = userService.loadUserByUsername(username);
+        if (fromDB == null) return false;
         if (!fromDB.getUsername().equals(username)) return false;
         if (!passwordEncoder.matches(password, fromDB.getPassword())) return false;
         return true;

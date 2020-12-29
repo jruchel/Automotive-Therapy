@@ -25,23 +25,27 @@ public class SecurityController {
 
     @PostMapping("/login")
     public ResponseEntity<Boolean> login(@RequestBody User user) {
+        if (user == null) new ResponseEntity<>(false, HttpStatus.OK);
         return new ResponseEntity<>(securityService.login(user.getUsername(), user.getPassword()), HttpStatus.OK);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
         securityService.logout();
-        return new ResponseEntity<>("You have been logged out", HttpStatus.OK);
+        return new ResponseEntity<>("Wylogowano", HttpStatus.OK);
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(HttpServletRequest servletRequest, @RequestBody User user) {
+        if (user == null) new ResponseEntity<>(false, HttpStatus.OK);
         if (!verifyAdminKey(servletRequest.getHeader("key")))
             return new ResponseEntity<>("Błędny klucz", HttpStatus.CONFLICT);
         if (userService.loadUserByUsername(user.getUsername()) != null)
             return new ResponseEntity<>("Użytkownik już istnieje", HttpStatus.CONFLICT);
         try {
             securityService.register(user);
+            if (userService.loadUserByUsername(user.getUsername()) == null)
+                return new ResponseEntity<>("Bład rejestracji, spróbuj ponownie", HttpStatus.OK);
             return new ResponseEntity<>("Rejestracja zakończona.", HttpStatus.OK);
         } catch (EntityIntegrityException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);

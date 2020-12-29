@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("**/moderator/**").hasRole("moderator")
-                .antMatchers("/security/login", "/opinons/post", "/opinions/get", "/orders/add", "security/register").permitAll()
+                .antMatchers("/security/login", "/opinons/post", "/opinions/get", "/orders/add", "/security/register").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable();
         http.cors();
