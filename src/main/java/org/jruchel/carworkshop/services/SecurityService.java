@@ -1,6 +1,7 @@
 package org.jruchel.carworkshop.services;
 
 import org.jruchel.carworkshop.entities.User;
+import org.jruchel.carworkshop.exceptions.EntityIntegrityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,7 +34,7 @@ public class SecurityService {
         return true;
     }
 
-    public boolean register(User user) {
+    public boolean register(User user) throws EntityIntegrityException {
         if (userService.loadUserByUsername(user.getUsername()) != null) return false;
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);

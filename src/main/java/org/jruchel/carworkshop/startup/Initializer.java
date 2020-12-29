@@ -5,6 +5,7 @@ import org.jruchel.carworkshop.entities.Client;
 import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.entities.Role;
 import org.jruchel.carworkshop.entities.User;
+import org.jruchel.carworkshop.exceptions.EntityIntegrityException;
 import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.RoleService;
 import org.jruchel.carworkshop.services.SecurityService;
@@ -55,7 +56,11 @@ public class Initializer {
         user.setUsername(username);
         user.setPassword(password);
         user.grantRole(roleService.getRoleByTitle("moderator"));
-        securityService.register(user);
+        try {
+            securityService.register(user);
+        } catch (EntityIntegrityException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private Client createRandomUser() {

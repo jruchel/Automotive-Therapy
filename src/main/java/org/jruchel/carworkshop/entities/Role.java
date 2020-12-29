@@ -30,7 +30,7 @@ public class Role implements GrantedAuthority {
         this.users = new ArrayList<>();
     }
 
-    protected void addUser(User user) {
+    public void addUser(User user) {
         this.users.add(user);
     }
 

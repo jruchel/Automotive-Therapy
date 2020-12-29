@@ -10,13 +10,7 @@ import java.util.regex.Pattern;
 public class MyRandom {
 
     public static void main(String[] args) {
-        for (int i = 0; i < 1; i++) {
-            try {
-                System.out.println(getRandomStringMatching("[1-9][a-m][b-z][.:,\"/?!%$^&*()!@#\\{\\}]+", 4, 4));
-            } catch (RuntimeErrorException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
+        System.out.println(getRandomStringWithCharsMatching("[a-zA-Z0-9-]", 100));
     }
 
     public static int getRandom(int a, int b) {

@@ -1,6 +1,8 @@
 package org.jruchel.carworkshop.services;
 
+import org.jruchel.carworkshop.entities.Role;
 import org.jruchel.carworkshop.entities.User;
+import org.jruchel.carworkshop.exceptions.EntityIntegrityException;
 import org.jruchel.carworkshop.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,8 +23,27 @@ public class UserService implements UserDetailsService {
         return optional.orElse(null);
     }
 
-    public void save(User user) {
-        userRepository.save(user);
+    public void save(User user) throws EntityIntegrityException {
+        if (checkEntityIntegrity(user)) {
+            userRepository.save(user);
+        }
+    }
+
+    private boolean checkEntityIntegrity(User user) throws EntityIntegrityException {
+        try {
+            boolean success = true;
+            if (user.getRoles().size() < 0) throw new EntityIntegrityException("User cannot exist without roles");
+            for (Role r : user.getRoles()) {
+                if (r.getUsers().stream().noneMatch(u -> u.getUsername().equals(user.getUsername()))) {
+                    success = false;
+                    r.addUser(user);
+                }
+            }
+            return success || checkEntityIntegrity(user);
+
+        } catch (Exception ex) {
+            throw new EntityIntegrityException(ex.getMessage());
+        }
     }
 
     @Override
