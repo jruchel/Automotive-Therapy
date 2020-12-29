@@ -1,6 +1,6 @@
 package org.jruchel.carworkshop.validation.client;
 
-import org.jruchel.carworkshop.utils.Properties;
+import org.jruchel.carworkshop.configuration.Properties;
 import org.jruchel.carworkshop.validation.Validator;
 
 import java.io.IOException;

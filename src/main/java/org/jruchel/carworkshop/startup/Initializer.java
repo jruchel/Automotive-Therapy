@@ -1,5 +1,6 @@
-package org.jruchel.carworkshop.utils;
+package org.jruchel.carworkshop.startup;
 
+import org.jruchel.carworkshop.configuration.Properties;
 import org.jruchel.carworkshop.entities.Client;
 import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.entities.Role;
@@ -7,8 +8,7 @@ import org.jruchel.carworkshop.entities.User;
 import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.RoleService;
 import org.jruchel.carworkshop.services.SecurityService;
-import org.jruchel.carworkshop.services.UserService;
-import org.jruchel.carworkshop.utils.random.MyRandom;
+import org.jruchel.carworkshop.utils.MyRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -81,7 +81,7 @@ public class Initializer {
     @PostConstruct
     private void initialize() {
         createRoles();
-        Properties properties = Properties.getInstance();
+        org.jruchel.carworkshop.configuration.Properties properties = Properties.getInstance();
         try {
             createModerator(properties.readProperty("moderator.username"), properties.readProperty("moderator.password"));
         } catch (IOException e) {

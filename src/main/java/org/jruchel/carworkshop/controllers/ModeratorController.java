@@ -6,7 +6,7 @@ import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.MailingService;
 import org.jruchel.carworkshop.services.OrderService;
-import org.jruchel.carworkshop.utils.Properties;
+import org.jruchel.carworkshop.configuration.Properties;
 import org.jruchel.carworkshop.validation.ValidationErrorPasser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,7 +74,7 @@ public class ModeratorController {
     @PostMapping("/mail")
     public ResponseEntity<String> sendEmail(@RequestBody Email email) {
         try {
-            email.setFrom(org.jruchel.carworkshop.utils.Properties.getInstance().readProperty("mail.sender"));
+            email.setFrom(Properties.getInstance().readProperty("mail.sender"));
             mailingService.sendEmail(email, false);
             return new ResponseEntity<>("Wiadomość wysłana.", HttpStatus.OK);
         } catch (Exception e) {

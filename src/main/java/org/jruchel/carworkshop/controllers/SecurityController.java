@@ -3,7 +3,6 @@ package org.jruchel.carworkshop.controllers;
 import org.jruchel.carworkshop.entities.User;
 import org.jruchel.carworkshop.services.SecurityService;
 import org.jruchel.carworkshop.services.UserService;
-import org.jruchel.carworkshop.utils.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,5 +21,11 @@ public class SecurityController {
     @PostMapping("/login")
     public ResponseEntity<Boolean> login(@RequestBody User user) {
         return new ResponseEntity<>(securityService.login(user.getUsername(), user.getPassword()), HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        securityService.logout();
+        return new ResponseEntity<>("You have been logged out", HttpStatus.OK);
     }
 }

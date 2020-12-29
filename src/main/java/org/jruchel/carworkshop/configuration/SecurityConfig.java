@@ -1,4 +1,4 @@
-package org.jruchel.carworkshop.security;
+package org.jruchel.carworkshop.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

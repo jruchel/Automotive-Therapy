@@ -1,4 +1,4 @@
-package org.jruchel.carworkshop.utils;
+package org.jruchel.carworkshop.configuration;
 
 import java.io.*;
 import java.util.regex.Matcher;

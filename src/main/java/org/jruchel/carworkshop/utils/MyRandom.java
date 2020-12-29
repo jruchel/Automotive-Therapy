@@ -1,4 +1,4 @@
-package org.jruchel.carworkshop.utils.random;
+package org.jruchel.carworkshop.utils;
 
 import javax.management.RuntimeErrorException;
 import java.util.Arrays;

@@ -2,11 +2,10 @@ package org.jruchel.carworkshop.services;
 
 import org.jruchel.carworkshop.entities.Opinion;
 import org.jruchel.carworkshop.repositories.OpinionRepository;
-import org.jruchel.carworkshop.utils.random.MyRandom;
+import org.jruchel.carworkshop.utils.MyRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

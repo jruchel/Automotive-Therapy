@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -37,6 +38,15 @@ public class SecurityService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
         return true;
+    }
+
+    public void logout() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        try {
+            request.logout();
+        } catch (ServletException e) {
+            SecurityContextHolder.clearContext();
+        }
     }
 
     public boolean login(String username, String password) {

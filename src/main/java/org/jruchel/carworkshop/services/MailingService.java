@@ -1,7 +1,7 @@
 package org.jruchel.carworkshop.services;
 
+import org.jruchel.carworkshop.configuration.Properties;
 import org.jruchel.carworkshop.entities.Email;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class MailingService {
 
     public MailingService(JavaMailSender javaMailSender) {
         try {
-            this.sender = org.jruchel.carworkshop.utils.Properties.getInstance().readProperty("spring.mail.username");
+            this.sender = Properties.getInstance().readProperty("spring.mail.username");
         } catch (IOException e) {
             this.sender = "jruchel254@gmail.com";
         }
