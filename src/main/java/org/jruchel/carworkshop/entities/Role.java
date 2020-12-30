@@ -45,7 +45,7 @@ public class Role implements GrantedAuthority {
     }
 
     public void setTitle(String title) {
-        this.title = "ROLE_" + title;
+        this.title = "ROLE_" + title.toUpperCase();
     }
 
     @Override
