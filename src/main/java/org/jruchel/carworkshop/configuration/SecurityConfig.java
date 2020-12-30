@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private String [] anyRequest = {"/security/login", "/opinons/post", "/opinions/get", "/orders/add", "/security/register", "/swagger-ui.html"};
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -22,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("**/moderator/**").hasRole("moderator")
-                .antMatchers("/security/login", "/opinons/post", "/opinions/get", "/orders/add", "/security/register", "/swagger-ui.html").permitAll()
+                .antMatchers(anyRequest).permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable();
         http.cors();
