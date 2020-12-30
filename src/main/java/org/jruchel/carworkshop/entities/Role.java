@@ -44,6 +44,10 @@ public class Role implements GrantedAuthority {
         return Objects.equals(title, role.title);
     }
 
+    public void setTitle(String title) {
+        this.title = "ROLE_" + title;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id, title, users);
