@@ -21,13 +21,13 @@ public class SecurityConfig extends MySecurityConfig {
     static {
         setWhitelist(Arrays.asList("/swagger-resources/**",
                 "/v2/api-docs",
+                "swagger-ui.html",
                 "/webjars/**"));
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         setupEndpoints(http).authorizeRequests()
-                .antMatchers("swagger-ui.html").hasRole("MODERATOR")
                 .anyRequest().authenticated().and()
                 .csrf().disable().cors();
     }
