@@ -25,7 +25,7 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
     private boolean locked;
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
@@ -34,6 +34,12 @@ public class User implements UserDetails {
 
     public User() {
         this.roles = new HashSet<>();
+    }
+
+    public void setRoles(Set<Role> roles) {
+        for (Role r : roles) {
+            r.addUser(this);
+        }
     }
 
     public void grantRole(Role role) {

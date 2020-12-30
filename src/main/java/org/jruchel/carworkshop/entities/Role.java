@@ -1,5 +1,6 @@
 package org.jruchel.carworkshop.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,8 @@ public class Role implements GrantedAuthority {
     private int id;
     @Column(name = "title")
     private String title;
-    @ManyToMany(mappedBy = "roles", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private List<User> users;
 
     public Role() {
