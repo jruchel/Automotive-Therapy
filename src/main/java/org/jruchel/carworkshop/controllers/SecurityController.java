@@ -1,8 +1,11 @@
 package org.jruchel.carworkshop.controllers;
 
 import org.jruchel.carworkshop.configuration.Properties;
+import org.jruchel.carworkshop.entities.Role;
 import org.jruchel.carworkshop.entities.User;
+import org.jruchel.carworkshop.entities.UserRolesPair;
 import org.jruchel.carworkshop.exceptions.EntityIntegrityException;
+import org.jruchel.carworkshop.services.RoleService;
 import org.jruchel.carworkshop.services.SecurityService;
 import org.jruchel.carworkshop.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -22,6 +27,8 @@ public class SecurityController {
     private SecurityService securityService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
 
     @PostMapping("/login")
     public ResponseEntity<Boolean> login(@RequestBody User user) {
@@ -36,13 +43,25 @@ public class SecurityController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(HttpServletRequest servletRequest, @RequestBody User user) {
+    public ResponseEntity<String> register(HttpServletRequest servletRequest, @RequestBody UserRolesPair userRolesPair) {
+        User user = userRolesPair.getUser();
         if (user == null) new ResponseEntity<>(false, HttpStatus.OK);
         if (!verifyAdminKey(servletRequest.getHeader("key")))
             return new ResponseEntity<>("Błędny klucz", HttpStatus.CONFLICT);
         if (userService.loadUserByUsername(user.getUsername()) != null)
             return new ResponseEntity<>("Użytkownik już istnieje", HttpStatus.CONFLICT);
         try {
+            Set<Role> roles = userRolesPair.getRoles();
+            Set<Role> actualRoles = new HashSet<>();
+            for (Role r : roles) {
+                Role fromDB = roleService.getRoleByTitle(r.getTitle());
+                roles.removeIf(role -> fromDB != null && role.getTitle().equals(fromDB.getTitle()));
+                actualRoles.add(fromDB);
+            }
+            actualRoles.addAll(roles);
+            for (Role r : actualRoles) {
+                user.grantRole(r);
+            }
             securityService.register(user);
             if (userService.loadUserByUsername(user.getUsername()) == null)
                 return new ResponseEntity<>("Bład rejestracji, spróbuj ponownie", HttpStatus.OK);
