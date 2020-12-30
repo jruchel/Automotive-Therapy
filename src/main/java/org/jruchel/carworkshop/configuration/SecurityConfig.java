@@ -21,7 +21,7 @@ public class SecurityConfig extends MySecurityConfig {
     static {
         setWhitelist(Arrays.asList("/swagger-resources/**",
                 "/v2/api-docs",
-                "swagger-ui.html",
+                "/swagger-ui.html",
                 "/webjars/**"));
     }
 
