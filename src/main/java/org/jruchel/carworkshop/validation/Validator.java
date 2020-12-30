@@ -7,7 +7,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class Validator<A extends Annotation, E> implements ConstraintValidator<A, E> {
 

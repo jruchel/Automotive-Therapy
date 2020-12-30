@@ -143,7 +143,7 @@ public class ModeratorController extends Controller {
      * It's recommended to use this method in conjunction with sortOrdersByDate so that both clients and their orders display in the desired order
      *
      * @param clients    clients to sort
-     * @param descending wether or not in descending order
+     * @param descending whether or not in descending order
      * @return The same list of clients, sorted
      */
     private List<Client> sortClientsByDate(List<Client> clients, boolean descending) {

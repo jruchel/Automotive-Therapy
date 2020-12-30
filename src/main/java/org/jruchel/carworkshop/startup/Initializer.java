@@ -1,6 +1,5 @@
 package org.jruchel.carworkshop.startup;
 
-import org.jruchel.carworkshop.configuration.Properties;
 import org.jruchel.carworkshop.entities.Client;
 import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.entities.Role;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.*;
 
 @Component
@@ -40,13 +38,13 @@ public class Initializer {
     }
 
     private void createRoles() {
-        createRole("moderator");
+        createRole();
     }
 
-    private void createRole(String title) {
-        if (roleService.getRoleByTitle(title) == null) {
+    private void createRole() {
+        if (roleService.getRoleByTitle("moderator") == null) {
             Role moderator = new Role();
-            moderator.setTitle(title);
+            moderator.setTitle("moderator");
             roleService.save(moderator);
         }
     }

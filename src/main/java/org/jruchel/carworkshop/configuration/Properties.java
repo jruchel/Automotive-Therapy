@@ -17,12 +17,12 @@ public class Properties {
         return instance;
     }
 
-    private String getAbsolutePath(String path) {
-        return new File("").getAbsolutePath() + path;
+    private String getAbsolutePath() {
+        return new File("").getAbsolutePath() + "/src/main/resources/application.properties";
     }
 
     public String readProperty(String key) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(getAbsolutePath("/src/main/resources/application.properties")));
+        BufferedReader reader = new BufferedReader(new FileReader(getAbsolutePath()));
         String regex = String.format("%s\\=(.+)", key);
         String str;
         Pattern propertyPattern = Pattern.compile(regex);
