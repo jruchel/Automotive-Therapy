@@ -1,5 +1,7 @@
 package org.jruchel.carworkshop.controllers;
 
+import org.jruchel.carworkshop.automation.Controller;
+import org.jruchel.carworkshop.automation.SecuredMapping;
 import org.jruchel.carworkshop.entities.Client;
 import org.jruchel.carworkshop.entities.ClientOrderPair;
 import org.jruchel.carworkshop.entities.Order;
@@ -17,7 +19,7 @@ import java.util.Date;
 @CrossOrigin
 @RestController
 @RequestMapping("/orders")
-public class OrderController {
+public class OrderController extends Controller {
 
     private final OrderService orderService;
     private final ClientService clientService;
@@ -33,12 +35,12 @@ public class OrderController {
         this.mailingService = mailingService;
     }
 
-    @PostMapping("/add")
+    @SecuredMapping(path = "/add", method = RequestMethod.POST)
     public ResponseEntity<String> addOrder(@RequestBody ClientOrderPair clientOrderPair) {
         return addOrder(clientOrderPair, false);
     }
 
-    @PostMapping("/moderator/add")
+    @SecuredMapping(path = "/add/moderator", method = RequestMethod.POST, role = "moderator")
     public ResponseEntity<String> addOrderAsModerator(@RequestBody ClientOrderPair clientOrderPair) {
         return addOrder(clientOrderPair, true);
     }

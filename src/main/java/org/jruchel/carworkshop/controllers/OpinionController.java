@@ -1,5 +1,7 @@
 package org.jruchel.carworkshop.controllers;
 
+import org.jruchel.carworkshop.automation.Controller;
+import org.jruchel.carworkshop.automation.SecuredMapping;
 import org.jruchel.carworkshop.entities.Opinion;
 import org.jruchel.carworkshop.services.OpinionService;
 import org.jruchel.carworkshop.validation.ValidationErrorPasser;
@@ -12,7 +14,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("/opinions")
-public class OpinionController {
+public class OpinionController extends Controller {
 
     private final OpinionService opinionService;
     private final ValidationErrorPasser errorPasser;
@@ -22,12 +24,12 @@ public class OpinionController {
         this.errorPasser = ValidationErrorPasser.getInstance();
     }
 
-    @GetMapping("/get")
+    @SecuredMapping(path = "/get", method = RequestMethod.GET)
     public ResponseEntity<List<Opinion>> getRandomOpinions(@RequestParam(required = false, defaultValue = "5") int amount) {
         return new ResponseEntity<>(opinionService.getRandomOpinions(amount), HttpStatus.OK);
     }
 
-    @PostMapping("/post")
+    @SecuredMapping(path = "/post", method = RequestMethod.POST)
     public ResponseEntity<String> addOpinion(@RequestBody Opinion opinion) {
         try {
             if (opinion.getName() == null || opinion.getName().isEmpty()) {

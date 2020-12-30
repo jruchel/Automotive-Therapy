@@ -1,5 +1,7 @@
 package org.jruchel.carworkshop.controllers;
 
+import org.jruchel.carworkshop.automation.Controller;
+import org.jruchel.carworkshop.automation.SecuredMapping;
 import org.jruchel.carworkshop.configuration.Properties;
 import org.jruchel.carworkshop.entities.Role;
 import org.jruchel.carworkshop.entities.User;
@@ -14,14 +16,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/security")
-public class SecurityController {
+public class SecurityController extends Controller {
 
     @Autowired
     private SecurityService securityService;
@@ -30,19 +31,19 @@ public class SecurityController {
     @Autowired
     private RoleService roleService;
 
-    @PostMapping("/login")
+    @SecuredMapping(path = "/login", method = RequestMethod.POST)
     public ResponseEntity<Boolean> login(@RequestBody User user) {
         if (user == null) new ResponseEntity<>(false, HttpStatus.OK);
         return new ResponseEntity<>(securityService.login(user.getUsername(), user.getPassword()), HttpStatus.OK);
     }
 
-    @PostMapping("/logout")
+    @SecuredMapping(path = "/logout", method = RequestMethod.POST, role = "moderator")
     public ResponseEntity<String> logout() {
         securityService.logout();
         return new ResponseEntity<>("Wylogowano", HttpStatus.OK);
     }
 
-    @PostMapping("/register")
+    @SecuredMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<String> register(HttpServletRequest servletRequest, @RequestBody UserRolesPair userRolesPair) {
         User user = userRolesPair.getUser();
         if (user == null) new ResponseEntity<>(false, HttpStatus.OK);

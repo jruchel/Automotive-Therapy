@@ -1,5 +1,7 @@
 package org.jruchel.carworkshop.controllers;
 
+import org.jruchel.carworkshop.automation.Controller;
+import org.jruchel.carworkshop.automation.SecuredMapping;
 import org.jruchel.carworkshop.entities.Client;
 import org.jruchel.carworkshop.entities.Email;
 import org.jruchel.carworkshop.entities.Order;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
 @CrossOrigin
 @RestController
 @RequestMapping("/moderator")
-public class ModeratorController {
+public class ModeratorController extends Controller {
 
     private final ClientService clientService;
     private final OrderService orderService;
@@ -34,7 +36,7 @@ public class ModeratorController {
         this.errorPasser = ValidationErrorPasser.getInstance();
     }
 
-    @PostMapping("/add")
+    @SecuredMapping(path = "/add", method = RequestMethod.POST, role = "moderator")
     public ResponseEntity<String> addClient(@RequestBody Client client) {
         for (Order order : client.getOrders()) {
             order.setClient(client);
@@ -51,7 +53,7 @@ public class ModeratorController {
         return new ResponseEntity<>("Błąd dowawania klienta do bazy danych", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping("/clients/unresponded")
+    @SecuredMapping(path = "/clients/unresponded", method = RequestMethod.GET, role = "moderator")
     public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "0", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
         if (page < 1 && page != 0) page = 1;
         if (elements < 1) elements = 1;
@@ -62,7 +64,7 @@ public class ModeratorController {
         return new ResponseEntity<>(sortClientsByDate(clients, false), HttpStatus.OK);
     }
 
-    @GetMapping("/orders/unresponded")
+    @SecuredMapping(path = "/orders/unresponded", method = RequestMethod.GET, role = "moderator")
     public ResponseEntity<List<Order>> getUnrespondedOrders(@RequestParam(required = false, defaultValue = "1", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
         if (page < 1) page = 1;
         if (elements < 1) elements = 1;
@@ -71,7 +73,7 @@ public class ModeratorController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @PostMapping("/mail")
+    @SecuredMapping(path = "/mail", method = RequestMethod.POST, role = "moderator")
     public ResponseEntity<String> sendEmail(@RequestBody Email email) {
         try {
             email.setFrom(Properties.getInstance().readProperty("mail.sender"));
@@ -82,7 +84,7 @@ public class ModeratorController {
         }
     }
 
-    @PostMapping("/orders/respond")
+    @SecuredMapping(path = "/orders/respond", method = RequestMethod.POST, role = "moderator")
     public ResponseEntity<Order> respondToOrder(@RequestBody int orderID) {
         Order order = orderService.findById(orderID);
         order.setResponed(true);
@@ -90,7 +92,7 @@ public class ModeratorController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    @GetMapping("/clients/awaiting")
+    @SecuredMapping(path = "/clients/awaiting", method = RequestMethod.GET, role = "moderator")
     public ResponseEntity<List<Client>> getAwaitingClients(@RequestParam(required = false, defaultValue = "0", name = "page") int page, @RequestParam(required = false, defaultValue = "10", name = "elements") int elements) {
         if (page < 1 && page != 0) page = 1;
         List<Client> clients = clientService.getAwaitingClients(page, elements);
@@ -100,7 +102,7 @@ public class ModeratorController {
         return new ResponseEntity<>(sortClientsByDate(clients, false), HttpStatus.OK);
     }
 
-    @PostMapping("/orders/complete")
+    @SecuredMapping(path = "/orders/complete", method = RequestMethod.POST, role = "moderator")
     public ResponseEntity<Order> completeOrder(@RequestBody int orderID) {
         try {
             Order order = orderService.findById(orderID);
