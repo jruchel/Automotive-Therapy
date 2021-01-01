@@ -30,6 +30,7 @@ public class Order {
     @DateConstraint
     private Date date;
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public enum Status {

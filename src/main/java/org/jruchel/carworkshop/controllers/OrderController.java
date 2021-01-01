@@ -49,6 +49,7 @@ public class OrderController extends Controller {
         Order cleanOrder = new Order();
         cleanOrder.setClient(order.getClient());
         cleanOrder.setDescription(order.getDescription());
+        cleanOrder.setStatus(Order.Status.pending);
         return cleanOrder;
     }
 
