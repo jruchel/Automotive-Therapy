@@ -45,9 +45,16 @@ public class OrderController extends Controller {
         return addOrder(clientOrderPair, true);
     }
 
+    private Order getCleanOrder(Order order) {
+        Order cleanOrder = new Order();
+        cleanOrder.setClient(order.getClient());
+        cleanOrder.setDescription(order.getDescription());
+        return cleanOrder;
+    }
+
     private ResponseEntity<String> addOrder(ClientOrderPair clientOrderPair, boolean moderator) {
         Client client = clientOrderPair.getClient();
-        Order order = clientOrderPair.getOrder();
+        Order order = getCleanOrder(clientOrderPair.getOrder());
         if (client == null)
             return new ResponseEntity<>("Dane kontaktowe muszą zostać wypełnione.", HttpStatus.CONFLICT);
         if (client.getPhoneNumber() == null) client.setPhoneNumber("");

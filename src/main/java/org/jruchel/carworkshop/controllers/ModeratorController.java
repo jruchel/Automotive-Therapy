@@ -36,23 +36,6 @@ public class ModeratorController extends Controller {
         this.errorPasser = ValidationErrorPasser.getInstance();
     }
 
-    @SecuredMapping(path = "/add", method = RequestMethod.POST, role = "moderator")
-    public ResponseEntity<String> addClient(@RequestBody Client client) {
-        for (Order order : client.getOrders()) {
-            order.setClient(client);
-        }
-        if (clientService.findByPhone(client.getPhoneNumber()) != null || clientService.findByEmail(client.getEmail()) != null)
-            return new ResponseEntity<>("Ten klient jest już wpisany do bazy danych", HttpStatus.CONFLICT);
-        try {
-            clientService.save(client);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(errorPasser.getMessagesAsString(), HttpStatus.NOT_ACCEPTABLE);
-        }
-        if (clientService.findByPhone(client.getPhoneNumber()) != null || clientService.findByEmail(client.getEmail()) != null)
-            return new ResponseEntity<>("Klient został dodany do bazy danych", HttpStatus.OK);
-        return new ResponseEntity<>("Błąd dowawania klienta do bazy danych", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     @SecuredMapping(path = "/clients/unresponded", method = RequestMethod.GET, role = "moderator")
     public ResponseEntity<List<Client>> getUnrespondedClients(@RequestParam(required = false, defaultValue = "0", value = "page") int page, @RequestParam(required = false, defaultValue = "10", value = "elements") int elements) {
         if (page < 1 && page != 0) page = 1;
@@ -92,7 +75,7 @@ public class ModeratorController extends Controller {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    @SecuredMapping(path = "/clients/awaiting", method = RequestMethod.GET, role = "moderator")
+    @SecuredMapping(path = "/clients/uncompleted", method = RequestMethod.GET, role = "moderator")
     public ResponseEntity<List<Client>> getAwaitingClients(@RequestParam(required = false, defaultValue = "0", name = "page") int page, @RequestParam(required = false, defaultValue = "10", name = "elements") int elements) {
         if (page < 1 && page != 0) page = 1;
         List<Client> clients = clientService.getAwaitingClients(page, elements);
