@@ -36,17 +36,25 @@ public class ClientService {
     }
 
     public List<Client> getUnrespondedClients(int page, int elements) {
-        if (page < 1) {
-            return clientRepository.getUnrespondedClients();
+        try {
+            if (page < 1) {
+                return clientRepository.getUnrespondedClients();
+            }
+            return clientRepository.getUnrespondedClients(PageRequest.of(page - 1, elements));
+        } catch (Exception ex) {
+            return new ArrayList<>();
         }
-        return clientRepository.getUnrespondedClients(PageRequest.of(page - 1, elements));
     }
 
     public List<Client> getUncompletedClients(int page, int elements) {
-        if (page < 1) {
-            return clientRepository.getUncompletedClients();
+        try {
+            if (page < 1) {
+                return clientRepository.getUncompletedClients();
+            }
+            return clientRepository.getUncompletedClients(PageRequest.of(page - 1, elements));
+        } catch (Exception ex) {
+            return new ArrayList<>();
         }
-        return clientRepository.getUncompletedClients(PageRequest.of(page - 1, elements));
     }
 
     public void save(Client client) {
