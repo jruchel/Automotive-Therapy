@@ -68,11 +68,12 @@ public class ModeratorController extends Controller {
     }
 
     @SecuredMapping(path = "/orders/respond", method = RequestMethod.POST, role = "moderator")
-    public ResponseEntity<Order> respondToOrder(@RequestBody int orderID) {
+    public ResponseEntity<String> respondToOrder(@RequestBody int orderID) {
         Order order = orderService.findById(orderID);
+        if (order == null) new ResponseEntity<>("Wybrane zamówienie nie istnieje.", HttpStatus.CONFLICT);
         order.setResponed(true);
         orderService.save(order);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+        return new ResponseEntity<>("Zamówienie dodane pomyślnie.", HttpStatus.OK);
     }
 
     @SecuredMapping(path = "/clients/uncompleted", method = RequestMethod.GET, role = "moderator")
