@@ -72,7 +72,7 @@ public class Initializer {
         client.setEmail(email.toString().toLowerCase(Locale.ROOT));
         for (int i = 0; i < MyRandom.getRandom(1, 3); i++) {
             Order order = new Order();
-            order.setResponed(false);
+            order.setStatus(Order.Status.pending);
             order.setDescription(MyRandom.getRandomString(MyRandom.getRandom(10, 20)));
             order.setDate(new Date());
             order.setClient(client);

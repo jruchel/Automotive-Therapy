@@ -65,7 +65,7 @@ public class OrderController extends Controller {
             if (clientFromDB == null) {
                 client.addOrder(order);
             } else {
-                if (clientFromDB.getOrders().stream().anyMatch(o -> o.getDescription().equals(order.getDescription()) && !o.isComplete())) {
+                if (clientFromDB.getOrders().stream().anyMatch(o -> o.getDescription().equals(order.getDescription()) && !o.getStatus().equals(Order.Status.completed))) {
                     return new ResponseEntity<>("Na twoim koncie znajduje się już identyczne zlecenie.", HttpStatus.CONFLICT);
                 }
                 clientFromDB.addOrder(order);

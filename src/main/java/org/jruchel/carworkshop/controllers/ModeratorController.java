@@ -67,19 +67,32 @@ public class ModeratorController extends Controller {
         }
     }
 
-    @SecuredMapping(path = "/orders/respond", method = RequestMethod.POST, role = "moderator")
-    public ResponseEntity<String> respondToOrder(@RequestBody int orderID) {
+    @SecuredMapping(path = "/orders/accept", method = RequestMethod.POST, role = "moderator")
+    public ResponseEntity<String> acceptOrder(@RequestBody int orderID) {
+        return respondToOrder(orderID, true);
+    }
+
+    @SecuredMapping(path = "/orders/reject", method = RequestMethod.POST, role = "moderator")
+    public ResponseEntity<String> rejectOrder(@RequestBody int orderID) {
+        return respondToOrder(orderID, false);
+    }
+
+    private ResponseEntity<String> respondToOrder(int orderID, boolean accept) {
         Order order = orderService.findById(orderID);
         if (order == null) new ResponseEntity<>("Wybrane zamówienie nie istnieje.", HttpStatus.CONFLICT);
-        order.setResponed(true);
+        if (accept) {
+            order.setStatus(Order.Status.accepted);
+        } else {
+            order.setStatus(Order.Status.rejected);
+        }
         orderService.save(order);
         return new ResponseEntity<>("Zamówienie dodane pomyślnie.", HttpStatus.OK);
     }
 
     @SecuredMapping(path = "/clients/uncompleted", method = RequestMethod.GET, role = "moderator")
-    public ResponseEntity<List<Client>> getAwaitingClients(@RequestParam(required = false, defaultValue = "0", name = "page") int page, @RequestParam(required = false, defaultValue = "10", name = "elements") int elements) {
+    public ResponseEntity<List<Client>> getUncompletedClients(@RequestParam(required = false, defaultValue = "0", name = "page") int page, @RequestParam(required = false, defaultValue = "10", name = "elements") int elements) {
         if (page < 1 && page != 0) page = 1;
-        List<Client> clients = clientService.getAwaitingClients(page, elements);
+        List<Client> clients = clientService.getUncompletedClients(page, elements);
         for (Client c : clients) {
             c.setOrders(sortOrdersByDate(c.getOrders(), false));
         }
@@ -90,8 +103,7 @@ public class ModeratorController extends Controller {
     public ResponseEntity<Order> completeOrder(@RequestBody int orderID) {
         try {
             Order order = orderService.findById(orderID);
-            order.setComplete(true);
-            order.setResponed(true);
+            order.setStatus(Order.Status.completed);
             orderService.save(order);
             Email mail = new Email();
             mail.setTo(order.getClient().getEmail());

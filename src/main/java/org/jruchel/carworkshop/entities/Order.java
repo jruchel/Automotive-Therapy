@@ -24,14 +24,15 @@ public class Order {
     @ClientConstraint
     @JsonIgnore
     private Client client;
-    @Column(name = "responded")
-    private boolean responed;
     @Column(name = "description")
     private String description;
     @Column(name = "date")
     @DateConstraint
     private Date date;
-    @Column(name = "complete")
-    private boolean complete;
+    @Column(name = "status")
+    private Status status;
 
+    public enum Status {
+        pending, accepted, completed, rejected;
+    }
 }

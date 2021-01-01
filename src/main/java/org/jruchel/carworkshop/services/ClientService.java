@@ -42,11 +42,11 @@ public class ClientService {
         return clientRepository.getUnrespondedClients(PageRequest.of(page - 1, elements));
     }
 
-    public List<Client> getAwaitingClients(int page, int elements) {
+    public List<Client> getUncompletedClients(int page, int elements) {
         if (page < 1) {
-            return clientRepository.getAwaitingClients();
+            return clientRepository.getUncompletedClients();
         }
-        return clientRepository.getAwaitingClients(PageRequest.of(page - 1, elements));
+        return clientRepository.getUncompletedClients(PageRequest.of(page - 1, elements));
     }
 
     public void save(Client client) {
