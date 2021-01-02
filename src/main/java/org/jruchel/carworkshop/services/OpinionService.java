@@ -23,7 +23,7 @@ public class OpinionService {
     public List<Opinion> getRandomOpinions(int amount) {
         List<Opinion> opinions = opinionRepository.getOpinions(amount * 2);
         while (opinions.size() > amount) {
-            opinions.remove(MyRandom.getRandom(0, opinions.size()));
+            opinions.remove(MyRandom.getRandom(0, opinions.size() - 1));
         }
         return opinions;
     }
