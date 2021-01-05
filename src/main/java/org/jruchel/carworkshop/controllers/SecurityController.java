@@ -36,7 +36,7 @@ public class SecurityController extends Controller {
     public ResponseEntity<String> authorize(@RequestBody User user) {
         if (!securityService.authenticate(user.getUsername(), user.getPassword()))
             return new ResponseEntity<>("Błędne dane logowanie", HttpStatus.OK);
-        return new ResponseEntity<>(JWTUtils.generateToken(user), HttpStatus.OK);
+        return new ResponseEntity<>("token:" + JWTUtils.generateToken(user), HttpStatus.OK);
     }
 
     @SecuredMapping(path = "/register", method = RequestMethod.POST)
