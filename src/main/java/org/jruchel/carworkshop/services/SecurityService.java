@@ -27,7 +27,7 @@ public class SecurityService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private boolean validate(String username, String password) {
+    public boolean authenticate(String username, String password) {
         UserDetails fromDB = userService.loadUserByUsername(username);
         if (fromDB == null) return false;
         if (!fromDB.getUsername().equals(username)) return false;
@@ -41,27 +41,4 @@ public class SecurityService {
         userService.save(user);
         return true;
     }
-
-    public void logout() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        try {
-            request.logout();
-        } catch (ServletException e) {
-            SecurityContextHolder.clearContext();
-        }
-    }
-
-    public boolean login(String username, String password) {
-        if (!validate(username, password)) return false;
-        UserDetails user = userService.loadUserByUsername(username);
-        Authentication auth = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(auth);
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        HttpSession session = request.getSession(true);
-        session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
-        return true;
-    }
-
-
 }

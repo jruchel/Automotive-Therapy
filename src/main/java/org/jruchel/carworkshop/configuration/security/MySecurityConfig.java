@@ -1,4 +1,4 @@
-package org.jruchel.carworkshop.configuration;
+package org.jruchel.carworkshop.configuration.security;
 
 import org.jruchel.carworkshop.automation.Controller;
 import org.jruchel.carworkshop.automation.Endpoint;

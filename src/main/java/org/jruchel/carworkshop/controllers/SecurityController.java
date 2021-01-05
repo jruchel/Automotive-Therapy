@@ -10,6 +10,7 @@ import org.jruchel.carworkshop.exceptions.EntityIntegrityException;
 import org.jruchel.carworkshop.services.RoleService;
 import org.jruchel.carworkshop.services.SecurityService;
 import org.jruchel.carworkshop.services.UserService;
+import org.jruchel.carworkshop.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,16 +32,11 @@ public class SecurityController extends Controller {
     @Autowired
     private RoleService roleService;
 
-    @SecuredMapping(path = "/login", method = RequestMethod.POST)
-    public ResponseEntity<Boolean> login(@RequestBody User user) {
-        if (user == null) new ResponseEntity<>(false, HttpStatus.OK);
-        return new ResponseEntity<>(securityService.login(user.getUsername(), user.getPassword()), HttpStatus.OK);
-    }
-
-    @SecuredMapping(path = "/logout", method = RequestMethod.POST, role = "moderator")
-    public ResponseEntity<String> logout() {
-        securityService.logout();
-        return new ResponseEntity<>("Wylogowano", HttpStatus.OK);
+    @SecuredMapping(path = "/authenticate", method = RequestMethod.POST)
+    public ResponseEntity<String> authorize(@RequestBody User user) {
+        if (!securityService.authenticate(user.getUsername(), user.getPassword()))
+            return new ResponseEntity<>("Błędne dane logowanie", HttpStatus.OK);
+        return new ResponseEntity<>(JWTUtils.generateToken(user), HttpStatus.OK);
     }
 
     @SecuredMapping(path = "/register", method = RequestMethod.POST)
