@@ -28,7 +28,7 @@ public class Initializer {
         List<Client> list = new ArrayList<>();
 
         for (int i = 0; i < amount; i++) {
-            Client random = createRandomUser();
+            Client random = createRandomClient();
             if (list.stream().anyMatch(c -> c.getEmail().equals(random.getEmail()))) i--;
             else {
                 list.add(random);
@@ -61,7 +61,7 @@ public class Initializer {
         }
     }
 
-    private Client createRandomUser() {
+    private Client createRandomClient() {
         Client client = new Client();
         client.setPhoneNumber(MyRandom.getRandomStringWithCharsMatching("\\d", 9));
         StringBuilder email = new StringBuilder();
