@@ -25,7 +25,7 @@ public interface ClientRepository extends PagingAndSortingRepository<Client, Int
     @Query(nativeQuery = true, value = "select * from client where client.id in (select distinct orders.client_id from orders where orders.status = 'accepted')")
     List<Client> getUncompletedClients(Pageable pageable);
 
-    @Query(nativeQuery = true, value = "select * from client where client.id in (select distinct orders.client_id from orders orders.status = 'accepted')")
+    @Query(nativeQuery = true, value = "select * from client where client.id in (select distinct orders.client_id from orders where orders.status = 'accepted')")
     List<Client> getUncompletedClients();
 
 }
