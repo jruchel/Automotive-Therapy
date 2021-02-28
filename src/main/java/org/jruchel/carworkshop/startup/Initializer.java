@@ -1,5 +1,6 @@
 package org.jruchel.carworkshop.startup;
 
+import org.jruchel.carworkshop.configuration.Properties;
 import org.jruchel.carworkshop.entities.Client;
 import org.jruchel.carworkshop.entities.Order;
 import org.jruchel.carworkshop.entities.Role;
@@ -49,16 +50,15 @@ public class Initializer {
         }
     }
 
-    private void createModerator(String username, String password) {
+    private void createModerator(String username, String password) throws EntityIntegrityException {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
-        user.grantRole(roleService.getRoleByTitle("moderator"));
-        try {
-            securityService.register(user);
-        } catch (EntityIntegrityException e) {
-            System.out.println(e.getMessage());
-        }
+        Role moderatorRole = new Role();
+        moderatorRole.setTitle("moderator");
+        user.grantRole(moderatorRole);
+        securityService.register(user);
+
     }
 
     private Client createRandomClient() {
@@ -84,5 +84,10 @@ public class Initializer {
     @PostConstruct
     private void initialize() {
         createRoles();
+        try {
+            createModerator("admin", "admin1");
+        } catch (EntityIntegrityException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

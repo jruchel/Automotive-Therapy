@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  website:
+    build: C:/Users/admin/WebstormProjects/carworkshop-front
+    ports:
+      - 8080:8080
+    volumes:
+      - C:/Users/admin/WebstormProjects/carworkshop-front/src
+    depends_on:
+      - workshop-server
+  workshop-server:
+    build: ./
+    volumes:
+      - ./src/main
+    ports:
+      - 8081:8081

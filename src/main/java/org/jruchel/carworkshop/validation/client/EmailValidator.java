@@ -19,8 +19,7 @@ public class EmailValidator extends Validator<EmailConstraint, String> {
             if(!result) addMessage("Invalid email.");
             return result;
         } catch (IOException e) {
-            addMessage("Internal validation error.");
-            return false;
+            return true;
         }
     }
 

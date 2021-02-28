@@ -5,6 +5,7 @@ import org.jruchel.carworkshop.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +17,10 @@ public class RoleService {
     public Role findById(Integer id) {
         Optional<Role> optional = roleRepository.findById(id);
         return optional.orElse(null);
+    }
+
+    public List<Role> findAll() {
+        return (List<Role>) roleRepository.findAll();
     }
 
     public void save(Role role) {
