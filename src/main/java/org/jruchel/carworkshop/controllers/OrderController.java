@@ -27,8 +27,8 @@ public class OrderController extends Controller {
     private final MailingService mailingService;
     private final Properties properties;
 
-    public OrderController(OrderService orderService, ClientService clientService, MailingService mailingService) {
-        this.properties = Properties.getInstance();
+    public OrderController(Properties properties, OrderService orderService, ClientService clientService, MailingService mailingService) {
+        this.properties = properties;
         this.orderService = orderService;
         this.errorPasser = ValidationErrorPasser.getInstance();
         this.clientService = clientService;
@@ -71,7 +71,7 @@ public class OrderController extends Controller {
                 }
                 clientFromDB.addOrder(order);
                 //Only updating the phone number if it changes to another valid phone number
-                if (client.getPhoneNumber() != null && !client.getPhoneNumber().isEmpty() && client.getPhoneNumber().matches(Properties.getInstance().readProperty("pattern.phone"))) {
+                if (client.getPhoneNumber() != null && !client.getPhoneNumber().isEmpty() && client.getPhoneNumber().matches(properties.getPhonePattern())) {
                     clientFromDB.setPhoneNumber(client.getPhoneNumber());
                 }
                 //Making sure an order like this isn't already in the database
@@ -83,7 +83,7 @@ public class OrderController extends Controller {
             order.getClient().setLastOrder(new Date());
             orderService.save(order);
             if (!moderator)
-                mailingService.sendEmail(order.getClient().getEmail(), properties.readProperty("mailing.generic.subject"), properties.readProperty("mailing.generic.content"), true);
+                mailingService.sendEmail(order.getClient().getEmail(), properties.getGenericMailingSubject(), properties.getGenericMailingContent(), true);
         } catch (Exception ex) {
             String message = errorPasser.getMessagesAsString();
             if (message.isEmpty()) message = ex.getMessage();

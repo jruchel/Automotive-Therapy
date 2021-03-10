@@ -13,6 +13,7 @@ public class CarworkshopApplication {
     }
 }
 
-//TODO it is now possible to override clients data if you input their phone number or email and override the remaining with yours
-// since sending another order these values are updated
+//TODO it is now possible to override clients data if you input their phone number or email and override the other with yours
+// since when sending another order these values are updated
 //TODO a solution to this would be to require a clients email address and require the client to confirm their order through the email
+//TODO move configuration from application.properties to corresponding configuration java classes

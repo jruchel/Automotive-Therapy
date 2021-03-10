@@ -2,6 +2,8 @@ package org.jruchel.carworkshop.services;
 
 import org.jruchel.carworkshop.configuration.Properties;
 import org.jruchel.carworkshop.entities.Email;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -9,18 +11,17 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 
+@DependsOn("Properties")
 @Service
 public class MailingService {
 
-    private String sender;
+    private final String sender;
     private final JavaMailSender javaMailSender;
+    @Autowired
+    private Properties properties;
 
     public MailingService(JavaMailSender javaMailSender) {
-        try {
-            this.sender = Properties.getInstance().readProperty("spring.mail.username");
-        } catch (IOException e) {
-            this.sender = "jruchel254@gmail.com";
-        }
+        this.sender = "8a761a48c09961";
         this.javaMailSender = javaMailSender;
     }
 

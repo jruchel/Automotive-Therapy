@@ -28,8 +28,10 @@ public class ModeratorController extends Controller {
     private final OrderService orderService;
     private final MailingService mailingService;
     private final ValidationErrorPasser errorPasser;
+    private final Properties properties;
 
-    public ModeratorController(ClientService clientService, OrderService orderService, MailingService mailingService) {
+    public ModeratorController(Properties properties, ClientService clientService, OrderService orderService, MailingService mailingService) {
+        this.properties = properties;
         this.clientService = clientService;
         this.orderService = orderService;
         this.mailingService = mailingService;
@@ -59,7 +61,6 @@ public class ModeratorController extends Controller {
     @SecuredMapping(path = "/mail", method = RequestMethod.POST, role = "moderator")
     public ResponseEntity<String> sendEmail(@RequestBody Email email) {
         try {
-            email.setFrom(Properties.getInstance().readProperty("mail.sender"));
             mailingService.sendEmail(email, false);
             return new ResponseEntity<>("Wiadomość wysłana.", HttpStatus.OK);
         } catch (Exception e) {
@@ -107,18 +108,14 @@ public class ModeratorController extends Controller {
             orderService.save(order);
             Email mail = new Email();
             mail.setTo(order.getClient().getEmail());
-            try {
-                mail.setSubject(Properties.getInstance().readProperty("mailing.complete.subject"));
-                Properties properties = Properties.getInstance();
-                String address = properties.readProperty("workshop.address");
-                String workingHours = properties.readProperty("workshop.working-hours");
-                String message = String.format(properties.readProperty("mailing.complete.content"), address, workingHours);
-                message += String.format("\n\nJeżeli chcesz, możesz wystawić nam opinię, pod tym adresem: \n\n%s", String.format("https://%s%s", properties.readProperty("frontend.domain.name"), properties.readProperty("frontend.opinion.form")));
-                mail.setMessage(message);
-            } catch (IOException e) {
-                mail.setSubject("Powiadomienie o zakonczeniu.");
-                mail.setMessage("Samochod jest gotowy do odbioru.");
-            }
+            mail.setSubject(properties.getGenericMailingSubject());
+            ;
+            String address = properties.getWorkshopAddress();
+            String workingHours = properties.getWorkingHours();
+            String message = String.format(properties.getCompleteMailingContent(), address, workingHours);
+            message += String.format("\n\nJeżeli chcesz, możesz wystawić nam opinię, pod tym adresem: \n\n%s", String.format("https://%s%s", properties.getDomainName(), properties.getOpinionForm()));
+            mail.setMessage(message);
+
 
             mailingService.sendEmail(mail, true);
             return new ResponseEntity<>(order, HttpStatus.OK);
