@@ -1,6 +1,7 @@
 package org.jruchel.carworkshop.configuration;
 
 
+import lombok.Getter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,78 +9,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 
-
+@Getter
 @Component("Properties")
-public class Properties {
+public class Properties implements InitializingBean {
 
-    public String getPhonePattern() {
-        return phonePattern;
-    }
 
-    public String getEmailPattern() {
-        return emailPattern;
-    }
-
-    public String getModeratorUsername() {
-        return moderatorUsername;
-    }
-
-    public String getModeratorPassword() {
-        return moderatorPassword;
-    }
-
-    public String getAdministratorKey() {
-        return administratorKey;
-    }
-
-    public String getDomainName() {
-        return domainName;
-    }
-
-    public String getOpinionForm() {
-        return opinionForm;
-    }
-
-    public String getGenericMailingSubject() {
-        return genericMailingSubject;
-    }
-
-    public String getGenericMailingContent() {
-        return genericMailingContent;
-    }
-
-    public String getCompleteMailingSubject() {
-        return completeMailingSubject;
-    }
-
-    public String getCompleteMailingContent() {
-        return completeMailingContent;
-    }
-
-    public String getWorkshopAddress() {
-        return workshopAddress;
-    }
-
-    public String getWorkingHours() {
-        return workingHours;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public boolean isStartTLS() {
-        return startTLS;
-    }
-
+    @Value("${spring.datasource.username}")
+    private String datasourceUsername;
+    @Value("${spring.datasource.password}")
+    private String datasourcePassword;
+    @Value("${spring.datasource.url}")
+    private String datasourceUrl;
     @Value("${pattern.phone}")
     private String phonePattern;
     @Value("${pattern.email}")
@@ -116,4 +56,10 @@ public class Properties {
     private boolean startTLS;
 
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println(datasourceUrl);
+        System.out.println(datasourceUsername);
+        System.out.println(datasourcePassword);
+    }
 }

@@ -29,15 +29,14 @@ public class Validator<A extends Annotation, E> implements ConstraintValidator<A
                 result = result && String.valueOf(m.invoke(this, value)).equals("true");
                 m.setAccessible(false);
             } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                return false;
             }
 
         }
         if (errorPasser != null) {
             try {
                 errorPasser.addMessage(value.toString(), errorMessage.toString());
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 errorPasser.addMessage("Unknown parameter", "Null value.");
             }
         }
