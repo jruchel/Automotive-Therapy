@@ -1,6 +1,6 @@
 package org.jruchel.carworkshop.repositories;
 
-import org.jruchel.carworkshop.entities.Client;
+import org.jruchel.carworkshop.models.entities.Client;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;

@@ -2,9 +2,9 @@ package org.jruchel.carworkshop.controllers;
 
 import org.jruchel.carworkshop.automation.Controller;
 import org.jruchel.carworkshop.automation.SecuredMapping;
-import org.jruchel.carworkshop.entities.Client;
-import org.jruchel.carworkshop.entities.ClientOrderPair;
-import org.jruchel.carworkshop.entities.Order;
+import org.jruchel.carworkshop.models.entities.Client;
+import org.jruchel.carworkshop.models.ClientOrderPair;
+import org.jruchel.carworkshop.models.entities.Order;
 import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.MailingService;
 import org.jruchel.carworkshop.services.OrderService;

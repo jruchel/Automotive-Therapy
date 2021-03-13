@@ -2,7 +2,7 @@ package org.jruchel.carworkshop.controllers;
 
 import org.jruchel.carworkshop.automation.Controller;
 import org.jruchel.carworkshop.automation.SecuredMapping;
-import org.jruchel.carworkshop.entities.Opinion;
+import org.jruchel.carworkshop.models.entities.Opinion;
 import org.jruchel.carworkshop.services.OpinionService;
 import org.jruchel.carworkshop.validation.ValidationErrorPasser;
 import org.springframework.http.HttpStatus;

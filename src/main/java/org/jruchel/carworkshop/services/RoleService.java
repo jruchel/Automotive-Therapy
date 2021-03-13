@@ -1,6 +1,6 @@
 package org.jruchel.carworkshop.services;
 
-import org.jruchel.carworkshop.entities.Role;
+import org.jruchel.carworkshop.models.entities.Role;
 import org.jruchel.carworkshop.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

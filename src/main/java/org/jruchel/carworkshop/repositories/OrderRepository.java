@@ -1,5 +1,6 @@
 package org.jruchel.carworkshop.repositories;
-import org.jruchel.carworkshop.entities.Order;
+
+import org.jruchel.carworkshop.models.entities.Order;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -12,5 +13,8 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Integ
 
     @Query(nativeQuery = true, value = "select * from orders where status = 'pending'")
     List<Order> getUnrespondedOrders(Pageable pageable);
+
+    @Query(nativeQuery = true, value = "select count(status) from orders where status = ?1")
+    int countStatus(String status);
 
 }

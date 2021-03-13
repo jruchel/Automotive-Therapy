@@ -1,6 +1,6 @@
 package org.jruchel.carworkshop.validation.order;
 
-import org.jruchel.carworkshop.entities.Client;
+import org.jruchel.carworkshop.models.entities.Client;
 import org.jruchel.carworkshop.validation.Validator;
 
 public class ClientValidator extends Validator<ClientConstraint, Client> {

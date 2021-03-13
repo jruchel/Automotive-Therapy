@@ -1,6 +1,6 @@
 package org.jruchel.carworkshop.repositories;
 
-import org.jruchel.carworkshop.entities.User;
+import org.jruchel.carworkshop.models.entities.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package org.jruchel.carworkshop.entities;
+package org.jruchel.carworkshop.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

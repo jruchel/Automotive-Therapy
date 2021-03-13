@@ -3,7 +3,7 @@ package org.jruchel.carworkshop.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.jruchel.carworkshop.entities.User;
+import org.jruchel.carworkshop.models.entities.User;
 
 import java.util.Date;
 import java.util.HashMap;

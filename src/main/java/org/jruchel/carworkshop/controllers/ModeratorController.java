@@ -2,9 +2,9 @@ package org.jruchel.carworkshop.controllers;
 
 import org.jruchel.carworkshop.automation.Controller;
 import org.jruchel.carworkshop.automation.SecuredMapping;
-import org.jruchel.carworkshop.entities.Client;
-import org.jruchel.carworkshop.entities.Email;
-import org.jruchel.carworkshop.entities.Order;
+import org.jruchel.carworkshop.models.entities.Client;
+import org.jruchel.carworkshop.models.Email;
+import org.jruchel.carworkshop.models.entities.Order;
 import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.MailingService;
 import org.jruchel.carworkshop.services.OrderService;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;

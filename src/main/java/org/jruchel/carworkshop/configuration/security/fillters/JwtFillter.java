@@ -1,6 +1,6 @@
 package org.jruchel.carworkshop.configuration.security.fillters;
 
-import org.jruchel.carworkshop.entities.User;
+import org.jruchel.carworkshop.models.entities.User;
 import org.jruchel.carworkshop.services.UserService;
 import org.jruchel.carworkshop.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;

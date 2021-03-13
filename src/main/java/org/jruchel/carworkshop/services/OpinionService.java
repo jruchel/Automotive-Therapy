@@ -1,6 +1,6 @@
 package org.jruchel.carworkshop.services;
 
-import org.jruchel.carworkshop.entities.Opinion;
+import org.jruchel.carworkshop.models.entities.Opinion;
 import org.jruchel.carworkshop.repositories.OpinionRepository;
 import org.jruchel.carworkshop.utils.MyRandom;
 import org.springframework.beans.factory.annotation.Autowired;

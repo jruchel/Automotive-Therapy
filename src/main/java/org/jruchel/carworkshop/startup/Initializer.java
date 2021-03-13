@@ -1,10 +1,10 @@
 package org.jruchel.carworkshop.startup;
 
 import org.jruchel.carworkshop.configuration.Properties;
-import org.jruchel.carworkshop.entities.Client;
-import org.jruchel.carworkshop.entities.Order;
-import org.jruchel.carworkshop.entities.Role;
-import org.jruchel.carworkshop.entities.User;
+import org.jruchel.carworkshop.models.entities.Client;
+import org.jruchel.carworkshop.models.entities.Order;
+import org.jruchel.carworkshop.models.entities.Role;
+import org.jruchel.carworkshop.models.entities.User;
 import org.jruchel.carworkshop.exceptions.EntityIntegrityException;
 import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.RoleService;

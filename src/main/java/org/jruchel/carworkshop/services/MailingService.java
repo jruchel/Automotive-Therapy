@@ -1,14 +1,13 @@
 package org.jruchel.carworkshop.services;
 
 import org.jruchel.carworkshop.configuration.Properties;
-import org.jruchel.carworkshop.entities.Email;
+import org.jruchel.carworkshop.models.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 @DependsOn("Properties")

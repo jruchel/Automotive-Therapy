@@ -1,4 +1,4 @@
-package org.jruchel.carworkshop.entities;
+package org.jruchel.carworkshop.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

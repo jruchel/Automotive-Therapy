@@ -1,6 +1,6 @@
 package org.jruchel.carworkshop.services;
 
-import org.jruchel.carworkshop.entities.Client;
+import org.jruchel.carworkshop.models.entities.Client;
 import org.jruchel.carworkshop.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

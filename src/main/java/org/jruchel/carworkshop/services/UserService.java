@@ -1,13 +1,12 @@
 package org.jruchel.carworkshop.services;
 
-import org.jruchel.carworkshop.entities.Role;
-import org.jruchel.carworkshop.entities.User;
+import org.jruchel.carworkshop.models.entities.Role;
+import org.jruchel.carworkshop.models.entities.User;
 import org.jruchel.carworkshop.exceptions.EntityIntegrityException;
 import org.jruchel.carworkshop.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
