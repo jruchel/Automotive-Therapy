@@ -25,18 +25,26 @@ public class DataService {
 
     public Data getOpinionsData() {
         List<Double> values = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 5; i > 0; i--) {
             values.add((double) opinionRepository.getAmountOfOpinionsByRating(i));
         }
 
         Data data = new Data();
-        data.setLabels(Arrays.asList("1", "2", "3", "4", "5"));
+        data.setLabels(reverseList(Arrays.asList("1", "2", "3", "4", "5")));
         List<Dataset> datasets = new ArrayList<>();
-        datasets.add(new Dataset("Opinions", Arrays.asList("#ff1919", "#ffae19", "#ffff19", "#4ca64c", "#198c19"), values));
+        datasets.add(new Dataset("Opinions", reverseList(Arrays.asList("#ff1919", "#ffae19", "#ffff19", "#4ca64c", "#198c19")), values));
         data.setDatasets(datasets);
         Options options = new Options(new Title("Opinie według ocen", true), true, false);
         data.setOptions(options);
         return data;
+    }
+
+    private List<String> reverseList(List<String> list) {
+        List<String> newList = new ArrayList<>();
+        for (int i = list.size() - 1; i >= 0; i--) {
+            newList.add(list.get(i));
+        }
+        return newList;
     }
 
     public Data getOrdersData() {
