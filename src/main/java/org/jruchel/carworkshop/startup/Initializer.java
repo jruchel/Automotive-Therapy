@@ -63,12 +63,11 @@ public class Initializer {
     private Client createRandomClient() {
         Client client = new Client();
         client.setPhoneNumber(MyRandom.getRandomStringWithCharsMatching("\\d", 9));
-        StringBuilder email = new StringBuilder();
-        email.append(MyRandom.getRandomString(MyRandom.getRandom(3, 10)));
-        email.append("@");
-        email.append(MyRandom.getRandomString(MyRandom.getRandom(3, 5)));
-        email.append(".").append(MyRandom.getRandomString(3));
-        client.setEmail(email.toString().toLowerCase(Locale.ROOT));
+        String email = MyRandom.getRandomString(MyRandom.getRandom(3, 10)) +
+                "@" +
+                MyRandom.getRandomString(MyRandom.getRandom(3, 5)) +
+                "." + MyRandom.getRandomString(3);
+        client.setEmail(email.toLowerCase(Locale.ROOT));
         for (int i = 0; i < MyRandom.getRandom(1, 3); i++) {
             Order order = new Order();
             order.setStatus(Order.Status.pending);

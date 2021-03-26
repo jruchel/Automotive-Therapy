@@ -3,10 +3,8 @@ package org.jruchel.carworkshop.utils;
 
 import lombok.Getter;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 
 @Getter
@@ -57,7 +55,7 @@ public class Properties implements InitializingBean {
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         System.out.println(datasourceUrl);
         System.out.println(datasourceUsername);
         System.out.println(datasourcePassword);
