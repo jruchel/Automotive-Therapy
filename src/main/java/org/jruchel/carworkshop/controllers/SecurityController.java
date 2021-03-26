@@ -2,7 +2,6 @@ package org.jruchel.carworkshop.controllers;
 
 import org.jruchel.carworkshop.automation.Controller;
 import org.jruchel.carworkshop.automation.SecuredMapping;
-import org.jruchel.carworkshop.configuration.Properties;
 import org.jruchel.carworkshop.models.entities.Role;
 import org.jruchel.carworkshop.models.entities.User;
 import org.jruchel.carworkshop.models.UserRolesPair;

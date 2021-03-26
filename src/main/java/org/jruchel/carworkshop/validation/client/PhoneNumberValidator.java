@@ -1,11 +1,8 @@
 package org.jruchel.carworkshop.validation.client;
 
 import org.jruchel.carworkshop.configuration.ApplicationContextHolder;
-import org.jruchel.carworkshop.configuration.Properties;
+import org.jruchel.carworkshop.utils.Properties;
 import org.jruchel.carworkshop.validation.Validator;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
 
 /**
  * This class uses manual bean initialization.

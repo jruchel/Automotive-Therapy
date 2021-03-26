@@ -8,7 +8,9 @@ import org.jruchel.carworkshop.models.entities.Order;
 import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.MailingService;
 import org.jruchel.carworkshop.services.OrderService;
-import org.jruchel.carworkshop.configuration.Properties;
+import org.jruchel.carworkshop.utils.Properties;
+import org.jruchel.carworkshop.utils.ProjectFiles;
+import org.jruchel.carworkshop.utils.Resources;
 import org.jruchel.carworkshop.validation.ValidationErrorPasser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -108,11 +110,7 @@ public class ModeratorController extends Controller {
             Email mail = new Email();
             mail.setTo(order.getClient().getEmail());
             mail.setSubject(properties.getGenericMailingSubject());
-            ;
-            String address = properties.getWorkshopAddress();
-            String workingHours = properties.getWorkingHours();
-            String message = String.format(properties.getCompleteMailingContent(), address, workingHours);
-            message += String.format("\n\nJeżeli chcesz, możesz wystawić nam opinię, pod tym adresem: \n\n%s", String.format("https://%s%s", properties.getDomainName(), properties.getOpinionForm()));
+            String message = Resources.getTemplateAsString("OrderComplete");
             mail.setMessage(message);
 
 

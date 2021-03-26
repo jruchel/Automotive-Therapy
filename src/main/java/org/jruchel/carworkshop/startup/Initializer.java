@@ -1,6 +1,5 @@
 package org.jruchel.carworkshop.startup;
 
-import org.jruchel.carworkshop.configuration.Properties;
 import org.jruchel.carworkshop.models.entities.Client;
 import org.jruchel.carworkshop.models.entities.Order;
 import org.jruchel.carworkshop.models.entities.Role;

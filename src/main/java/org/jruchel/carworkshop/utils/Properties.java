@@ -1,4 +1,4 @@
-package org.jruchel.carworkshop.configuration;
+package org.jruchel.carworkshop.utils;
 
 
 import lombok.Getter;

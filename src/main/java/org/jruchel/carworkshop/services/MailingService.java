@@ -1,13 +1,15 @@
 package org.jruchel.carworkshop.services;
 
-import org.jruchel.carworkshop.configuration.Properties;
+import org.jruchel.carworkshop.configuration.ApplicationContextHolder;
+import org.jruchel.carworkshop.utils.Properties;
 import org.jruchel.carworkshop.models.Email;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.List;
 
 @DependsOn("Properties")
@@ -16,44 +18,53 @@ public class MailingService {
 
     private final String sender;
     private final JavaMailSender javaMailSender;
-    @Autowired
-    private Properties properties;
+    private final Properties properties = ApplicationContextHolder.getContext().getBean(Properties.class);
 
     public MailingService(JavaMailSender javaMailSender) {
-        this.sender = "8a761a48c09961";
+        this.sender = properties.getUsername();
         this.javaMailSender = javaMailSender;
     }
 
-    private void sendEmail(String from, String to, String subject, String message, List<Byte[]> attachments) {
+    private void sendEmail(String from, String to, String subject, String message, List<Byte[]> attachments) throws MessagingException {
         if (attachments == null || attachments.size() == 0) {
             sendEmail(from, to, subject, message);
-        } else {
-            System.out.println();
         }
     }
 
-    public void sendEmail(String to, String subject, String content, boolean async) {
+    public void sendEmail(String to, String subject, String content, boolean async) throws MessagingException {
         if (async) {
-            new Thread(() -> sendEmail(sender, to, subject, content)).start();
+            new Thread(() -> {
+                try {
+                    sendEmail(sender, to, subject, content);
+                } catch (MessagingException ignored) {
+                }
+            }).start();
         } else {
             sendEmail(sender, to, subject, content);
         }
     }
 
-    public void sendEmail(Email email, boolean async) {
+    public void sendEmail(Email email, boolean async) throws MessagingException {
         if (async) {
-            new Thread(() -> sendEmail(sender, email.getTo(), email.getSubject(), email.getMessage(), email.getAttachments())).start();
+            new Thread(() -> {
+                try {
+                    sendEmail(sender, email.getTo(), email.getSubject(), email.getMessage(), email.getAttachments());
+                } catch (MessagingException ignored) {
+
+                }
+            }).start();
         } else {
             sendEmail(sender, email.getTo(), email.getSubject(), email.getMessage(), email.getAttachments());
         }
     }
 
-    private void sendEmail(String from, String to, String subject, String content) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setFrom(from);
-        message.setSubject(subject);
-        message.setText(content);
-        javaMailSender.send(message);
+    private void sendEmail(String from, String to, String subject, String content) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
+        messageHelper.setText(content, true);
+        messageHelper.setSubject(subject);
+        messageHelper.setFrom(from);
+        messageHelper.setTo(to);
+        javaMailSender.send(mimeMessage);
     }
 }

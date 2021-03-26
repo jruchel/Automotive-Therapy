@@ -8,7 +8,7 @@ import org.jruchel.carworkshop.models.entities.Order;
 import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.MailingService;
 import org.jruchel.carworkshop.services.OrderService;
-import org.jruchel.carworkshop.configuration.Properties;
+import org.jruchel.carworkshop.utils.Properties;
 import org.jruchel.carworkshop.validation.ValidationErrorPasser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
