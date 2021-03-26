@@ -9,6 +9,7 @@ import org.jruchel.carworkshop.services.ClientService;
 import org.jruchel.carworkshop.services.MailingService;
 import org.jruchel.carworkshop.services.OrderService;
 import org.jruchel.carworkshop.utils.Properties;
+import org.jruchel.carworkshop.utils.Resources;
 import org.jruchel.carworkshop.validation.ValidationErrorPasser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,7 +84,7 @@ public class OrderController extends Controller {
             order.getClient().setLastOrder(new Date());
             orderService.save(order);
             if (!moderator)
-                mailingService.sendEmail(order.getClient().getEmail(), properties.getGenericMailingSubject(), properties.getGenericMailingContent(), true);
+                mailingService.sendEmail(order.getClient().getEmail(), "Potwierdzenie złożenia zlecenia", Resources.getTemplateAsString("OrderSent"), true);
         } catch (Exception ex) {
             String message = errorPasser.getMessagesAsString();
             if (message.isEmpty()) message = ex.getMessage();
